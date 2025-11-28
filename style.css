@@ -1,29 +1,67 @@
-body { font-family: Arial; padding: 15px; }
+body { font-family: sans-serif; margin: 0; background: #e6ffe6; }
+#app { padding: 10px; }
 
-.centerbox {
-  display:flex; flex-direction:column; justify-content:center;
-  align-items:center; height:100vh; text-align:center; padding:20px;
+h2 { margin-top: 0; }
+
+.type-select button {
+  width: 48%;
+  padding: 12px;
+  margin: 3px 1%;
+  font-size: 20px;
+  border-radius: 10px;
+  border: 2px solid #008f39;
+  background: white;
+  font-weight: bold;
+}
+.type-select .active {
+  background: #008f39;
+  color: white;
 }
 
-input, select {
-  display:block;
-  width:100%;
-  padding:8px;
-  margin-bottom:15px;
-  font-size:18px;
-  color:#000;
+.label { font-size: 18px; font-weight: bold; color: black; }
+
+#quantity {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin: 15px 0;
+  color: black;
 }
 
-/* số lượng in đậm màu đen */
-#soLuong { font-weight:bold; color:black; }
-
-/* bảng */
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-table, th, td { border:1px solid #a8a8a8; }
-th { background:#e8e8e8; font-weight:bold; }
-th, td { padding:8px; }
-button {
-  width:100%; padding:12px; background:#008f39; border:none; color:white;
-  font-size:18px; border-radius:5px; margin-bottom:20px;
+.numpad button {
+  width: 31%;
+  height: 65px;
+  margin: 1%;
+  font-size: 28px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #000;
+  color:black;
+  font-weight:bold;
 }
-button:active { opacity:0.6; }
+
+.save-btn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 15px;
+  font-size: 24px;
+  background: #008f39;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.history { margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; margin-bottom:15px; }
+th, td { border: 1px solid #555; padding: 8px; text-align: center; }
+th { background: #caffca; }
+
+.total {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  margin-top: 8px;
+}
