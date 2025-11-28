@@ -1,68 +1,73 @@
 function initApp(){
-  document.getElementById("app").innerHTML = `
-    <h1>Ghi cân sầu riêng</h1>
+  let currentType = "THÁI";
+  let qty = "";
 
-    <label>Loại sầu riêng:</label>
-    <select id="loai">
-      <option value="thai">Thái</option>
-      <option value="ri">Ri</option>
-    </select>
+  const app = document.getElementById("app");
+  render();
 
-    <label>Cân (kg):</label>
-    <input type="number" id="kg" inputmode="decimal" />
+  function render(){
+    app.innerHTML = `
+      <h2>📌 Ghi cân sầu riêng</h2>
 
-    <label>Số lượng:</label>
-    <input type="number" id="soLuong" />
+      <div class="type-select">
+        <button id="thai" class="${currentType === "THÁI" ? "active" : ""}">THÁI</button>
+        <button id="ri" class="${currentType === "RI" ? "active" : ""}">RI</button>
+      </div>
 
-    <button id="add">Thêm</button>
+      <div class="label">Số lượng</div>
+      <div id="quantity">${qty || "0"}</div>
 
-    <h2>Lịch sử</h2>
-    <table id="history">
-      <thead>
-        <tr><th>Loại</th><th>Cân (kg)</th><th>Số lượng</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+      <div class="numpad">
+        ${[1,2,3,4,5,6,7,8,9,"←",0,"OK"].map(key => `
+          <button onclick="window.keypad('${key}')">${key}</button>
+        `).join("")}
+      </div>
 
-    <h2>Tổng</h2>
-    <p>Tổng Thái: <span id="total-thai">0</span></p>
-    <p>Tổng Ri: <span id="total-ri">0</span></p>
-  `;
+      <button class="save-btn" onclick="save()">💾 Lưu</button>
 
-  const loai = document.getElementById("loai");
-  const kg = document.getElementById("kg");
-  const soLuong = document.getElementById("soLuong");
-  const tbody = document.querySelector("#history tbody");
-  const totalT = document.getElementById("total-thai");
-  const totalR = document.getElementById("total-ri");
+      <div class="history">
+        <h3>Lịch sử</h3>
 
-  let total = { thai: 0, ri: 0 };
+        <table>
+          <tr><th colspan="2">SẦU RIÊNG THÁI</th></tr>
+          ${load("THÁI").map(i => `<tr><td>${i.qty}</td><td>${i.time}</td></tr>`).join("")}
+        </table>
 
-  document.getElementById("add").addEventListener("click", () => {
-    const L = loai.value;
-    const K = parseFloat(kg.value) || 0;
-    const SL = parseInt(soLuong.value) || 0;
+        <table>
+          <tr><th colspan="2">SẦU RIÊNG RI</th></tr>
+          ${load("RI").map(i => `<tr><td>${i.qty}</td><td>${i.time}</td></tr>`).join("")}
+        </table>
 
-    if (K === 0 || SL === 0) {
-      alert("Vui lòng nhập cân và số lượng!");
-      return;
-    }
+        <div class="total">
+          Tổng THÁI: ${sum("THÁI")}  —  Tổng RI: ${sum("RI")}
+        </div>
+      </div>
+    `;
 
-    // thêm vào bảng
-    tbody.innerHTML += `
-      <tr>
-        <td>${L === "thai" ? "Thái" : "Ri"}</td>
-        <td>${K.toFixed(2)}</td>
-        <td>${SL}</td>
-      </tr>`;
+    document.getElementById("thai").onclick = () => { currentType="THÁI"; render(); };
+    document.getElementById("ri").onclick = () => { currentType="RI"; render(); };
+  }
 
-    // tổng
-    total[L] += SL;
-    totalT.textContent = total.thai;
-    totalR.textContent = total.ri;
+  window.keypad = key => {
+    if(key === "←") qty = qty.slice(0,-1);
+    else if(key === "OK") save();
+    else qty += key;
+    render();
+  }
 
-    kg.value = "";
-    soLuong.value = "";
-    kg.focus();
-  });
+  function save(){
+    if(!qty) return;
+    const list = load(currentType);
+    list.unshift({ qty, time: new Date().toLocaleTimeString() });
+    localStorage.setItem(currentType, JSON.stringify(list));
+    qty = "";
+    render();
+  }
+
+  function load(type){
+    return JSON.parse(localStorage.getItem(type) || "[]");
+  }
+  function sum(type){
+    return load(type).reduce((t,i) => t + Number(i.qty), 0);
+  }
 }
