@@ -1,0 +1,29 @@
+body { font-family: Arial; padding: 15px; }
+
+.centerbox {
+  display:flex; flex-direction:column; justify-content:center;
+  align-items:center; height:100vh; text-align:center; padding:20px;
+}
+
+input, select {
+  display:block;
+  width:100%;
+  padding:8px;
+  margin-bottom:15px;
+  font-size:18px;
+  color:#000;
+}
+
+/* số lượng in đậm màu đen */
+#soLuong { font-weight:bold; color:black; }
+
+/* bảng */
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+table, th, td { border:1px solid #a8a8a8; }
+th { background:#e8e8e8; font-weight:bold; }
+th, td { padding:8px; }
+button {
+  width:100%; padding:12px; background:#008f39; border:none; color:white;
+  font-size:18px; border-radius:5px; margin-bottom:20px;
+}
+button:active { opacity:0.6; }
