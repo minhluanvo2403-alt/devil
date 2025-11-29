@@ -177,7 +177,7 @@ function renderSummary(){
   let A=0,B=0,C=0;
 
   records.forEach(r=>{
-    if(r.type===currentType){
+    if(r.type===currentType && r.date === dateInput.value){
       if(r.cat==="A") A+=r.qty;
       if(r.cat==="B") B+=r.qty;
       if(r.cat==="C") C+=r.qty;
@@ -206,12 +206,10 @@ function renderHistory() {
 
   if (!currentType) return;
 
-  // Lọc theo loại THÁI/RI và SẮP XẾP MỚI → CŨ
   const list = records
-    .filter(r => r.type === currentType)
-    .sort((a, b) => b.id - a.id);   // <<< SỬA TẠI ĐÂY
+    .filter(r => r.type === currentType && r.date === dateInput.value)
+    .sort((a, b) => b.id - a.id);
 
-  // Tạo 3 cột riêng
   const colA = list.filter(r => r.cat === "A");
   const colB = list.filter(r => r.cat === "B");
   const colC = list.filter(r => r.cat === "C");
@@ -221,36 +219,36 @@ function renderHistory() {
   for (let i = 0; i < maxRows; i++) {
     const row = document.createElement("tr");
 
-    // ===== CỘT A =====
+    // A
     const tdA = document.createElement("td");
     if (colA[i]) {
       tdA.textContent = fmt(colA[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.addEventListener("click", () => deleteRecord(colA[i].id));
+      del.onclick = ()=> deleteRecord(colA[i].id);
       tdA.appendChild(del);
     }
 
-    // ===== CỘT B =====
+    // B
     const tdB = document.createElement("td");
     if (colB[i]) {
       tdB.textContent = fmt(colB[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.addEventListener("click", () => deleteRecord(colB[i].id));
+      del.onclick = ()=> deleteRecord(colB[i].id);
       tdB.appendChild(del);
     }
 
-    // ===== CỘT C =====
+    // C
     const tdC = document.createElement("td");
     if (colC[i]) {
       tdC.textContent = fmt(colC[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.addEventListener("click", () => deleteRecord(colC[i].id));
+      del.onclick = ()=> deleteRecord(colC[i].id);
       tdC.appendChild(del);
     }
 
@@ -263,17 +261,16 @@ function renderHistory() {
 }
 
 
-
 /* CLEAR ALL */
 clearAllBtn.addEventListener("click", ()=>{
-  if(confirm("Xoá toàn bộ dữ liệu?")){
-    records = [];
-    localStorage.setItem(LS_KEY, "[]");
+  if(confirm("Xoá toàn bộ dữ liệu của ngày này?")){
+    records = records.filter(r => r.date !== dateInput.value);
+    localStorage.setItem(LS_KEY, JSON.stringify(records));
+
     renderSummary();
     renderHistory();
   }
 });
-
 
 /* SHOW / HIDE HISTORY */
 toggleBtn.addEventListener("click", ()=>{
