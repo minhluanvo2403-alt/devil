@@ -2,6 +2,7 @@ body {
     margin: 0;
     background: #f5f6fa;
     font-family: Arial, sans-serif;
+    padding-bottom: 250px; /* chừa chỗ bàn phím */
 }
 
 .container {
@@ -78,6 +79,19 @@ button.active {
     padding: 15px 0;
     text-align: center;
     margin-bottom: 10px;
+}
+
+/* BÀN PHÍM CỐ ĐỊNH */
+.keypad.fixed {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 360px;
+    background: #fff;
+    padding: 10px;
+    border-top: 3px solid #333;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
 }
 
 .keypad {
