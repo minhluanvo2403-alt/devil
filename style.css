@@ -12,230 +12,134 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Inter, Arial, sans-serif;
+  font-family:Inter, Arial;
   background:linear-gradient(180deg,var(--bg),#fbfcff);
   padding:12px;
 }
 
-.screen{
-  max-width:420px;
-  margin:auto;
-}
+.screen{ max-width:420px; margin:auto; }
 
 .card{
   background:#fff;
   border-radius:18px;
   padding:16px;
-  box-shadow:0 8px 22px rgba(20,30,60,0.06);
   margin-bottom:18px;
+  box-shadow:0 8px 22px rgba(20,30,60,0.06);
 }
 
-/* DATE */
 .date-pill{
   background:var(--muted);
   padding:16px;
   border-radius:12px;
-  text-align:center;
   font-weight:600;
-  font-size:18px;
+  text-align:center;
   margin-bottom:12px;
-  color:#222;
 }
 .date-hidden{ display:none; }
 
-/* SELECT BUTTONS */
-.select-row{
-  display:flex;
-  gap:12px;
-}
+.select-row{ display:flex; gap:12px; }
 .btn-select{
   flex:1;
-  background:#fff;
-  border:1px solid var(--pill-border);
   padding:14px;
   border-radius:12px;
-  font-size:16px;
+  border:1px solid var(--pill-border);
+  background:white;
   font-weight:700;
 }
 .btn-select.active{
   background:var(--accent);
-  color:#fff;
+  color:white;
   border-color:var(--accent-strong);
 }
 
-/* TOTALS */
-.totals-row{
-  display:flex;
-  gap:12px;
-}
+.totals-row{ display:flex; gap:12px; }
 .total-pill{
   flex:1;
-  background:var(--muted);
+  background:#eee;
   padding:12px;
   border-radius:12px;
   text-align:center;
 }
-.total-pill .label{ font-weight:700 }
-.total-pill .value{ font-size:20px; font-weight:800 }
-
+.total-pill .value{ font-size:20px; font-weight:800; }
 .grand-pill{
-  margin-top:10px;
-  background:var(--muted);
+  background:#eee;
+  padding:14px;
   border-radius:12px;
-  padding:16px;
+  margin-top:10px;
   text-align:center;
   font-weight:800;
-  font-size:22px;
+  font-size:20px;
 }
 
-/* DISPLAY SLAB */
 .display-slab{
-  margin-top:12px;
-  background:#fff;
-  border-radius:12px;
+  background:white;
   border:2px solid var(--pill-border);
   padding:18px;
-  text-align:center;
   font-size:28px;
+  border-radius:12px;
+  text-align:center;
+  margin-top:12px;
   color:#cfcfcf;
-  font-weight:700;
-  min-height:62px;
 }
 
-/* KEYPAD (NEW NON-FIXED) */
-.keypad {
-  width:100%;
-  max-width:420px;
-  margin:0 auto 16px auto;
-  padding-top:10px;
+.keypad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:12px;
+  margin-bottom:16px;
 }
-
 .kbtn{
   background:var(--kbd);
-  border-radius:16px;
-  border:none;
   padding:18px 0;
-  font-size:22px;
+  border-radius:16px;
   font-weight:800;
-  color:#111;
-  box-shadow:0 6px 12px rgba(0,0,0,0.04);
+  border:none;
+  font-size:22px;
 }
 
-/* HISTORY */
-.card-history{
-  padding:12px;
-}
 .history-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#f6f7fb;
-  padding:10px;
-  border-radius:12px;
+  padding-bottom:10px;
 }
-.small-btn{
-  background:transparent;
-  border:1px solid #ddd;
-  padding:6px 10px;
-  border-radius:8px;
-  font-weight:700;
-  font-size:12px;
-}
-
-.history-columns{
-  display:flex;
-  gap:12px;
-  margin-top:12px;
-}
-.col{
-  flex:1;
-  background:#fff;
-  border:1px solid #eee;
-  border-radius:12px;
-  padding:10px;
-}
-.col h4{
-  text-align:center;
-  margin:0 0 8px 0;
-}
-
-.entries{
-  padding:0;
-  margin:0;
-  list-style:none;
-  max-height:230px;
-  overflow:auto;
-}
-.entries li{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 4px;
-  border-bottom:1px dashed #eee;
-  font-weight:600;
-}
-.entries li .meta{
-  font-size:11px;
+.top-history-title{ display:flex; flex-direction:column; }
+#historyDate{
+  font-size:13px;
   color:#777;
+  margin-top:2px;
 }
-.entries li .del{
-  background:transparent;
-  border:none;
-  color:#d23b3b;
-  font-weight:800;
+
+.small-btn{
+  background:white;
+  border:1px solid #ddd;
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.history-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+.history-table th{
+  background:#f6f6f6;
+  padding:10px;
+  font-size:16px;
+}
+.history-table td{
+  border-bottom:1px solid #eee;
+  padding:10px 6px;
+  text-align:center;
+  font-weight:700;
+  font-size:18px;
+}
+.del-btn{
+  color:#d63031;
   cursor:pointer;
+  margin-left:6px;
 }
 
 .hidden{display:none}
-/* (GIỮ NGUYÊN TOÀN BỘ CSS CŨ BẠN ĐANG DÙNG) */
-/* ---- THÊM PHẦN DƯỚI ---- */
-
-.top-history-title {
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-#historyDate {
-  font-size:13px;
-  color:#777;
-  font-weight:600;
-  margin-left:4px;
-}
-
-.group-day {
-  background:#f6f7fb;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:12px;
-}
-
-.group-day-title {
-  font-weight:800;
-  margin-bottom:6px;
-}
-
-.group-type {
-  background:#fff;
-  padding:8px;
-  border-radius:10px;
-  border:1px solid #eee;
-  margin-bottom:6px;
-}
-
-.group-type-head {
-  font-weight:800;
-  margin-bottom:4px;
-}
-
-.group-rows {
-  padding-left:8px;
-}
-
-.group-row {
-  padding:4px 0;
-  font-size:15px;
-  border-bottom:1px dashed #eee;
-}
