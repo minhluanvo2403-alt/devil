@@ -1,117 +1,106 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f6fa;
-    text-align: center;
+  margin: 0;
+  padding: 0;
+  background: #f8f9fa;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-    width: 360px;
-    margin: auto;
-    padding: 10px;
+  width: 90%;
+  max-width: 450px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-h2 {
-    margin: 10px 0;
-    background: #ddd;
-    padding: 5px;
+h2, h3 {
+  margin-top: 0;
 }
 
-.datePicker {
-    width: 90%;
-    padding: 10px;
-    font-size: 18px;
-    margin: 10px auto;
-    border-radius: 6px;
-    border: 1px solid #000;
+label {
+  display: block;
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: bold;
 }
 
-.row {
-    display: flex;
-    justify-content: space-around;
-    margin: 10px 0;
+input[type="number"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
 }
 
-button {
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: 1px solid #000;
-    background: white;
-    cursor: pointer;
-    font-size: 18px;
-    color: black;
+.select-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-/* Khi được chọn */
-button.active {
-    background: #0984e3;
-    color: white;
-    border: 1px solid #0652dd;
+.select-btn {
+  flex: 1;
+  padding: 10px;
+  background: white;
+  border: 1px solid #888;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.total div {
-    background: #fff;
-    padding: 10px;
-    width: 30%;
-    border-radius: 6px;
-    font-size: 20px;
+.select-btn.active {
+  background: #21a3ff;
+  color: white;
+  border-color: #21a3ff;
 }
 
-.grand-total {
-    background: #ffeaa7;
-    padding: 10px;
-    font-size: 28px;
-    border-radius: 8px;
+.add-btn {
+  width: 100%;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  border: none;
+  margin-top: 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.display {
-    background: white;
-    padding: 15px;
-    margin: 10px;
-    font-size: 28px;
-    border: 2px solid #000;
-    border-radius: 6px;
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  background: #eee;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 10px;
 }
 
-.keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+#arrow {
+  font-size: 18px;
 }
 
-.keypad button {
-    background: black;
-    color: white;
-    font-size: 22px;
-    padding: 15px;
-}
-
-#delete {
-    background: #d63031 !important;
-}
-
-#enter {
-    background: #00b894 !important;
+.hidden {
+  display: none;
 }
 
 table {
-    width: 100%;
-    background: #fff;
-    border-collapse: collapse;
-    margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
 }
 
-table th, table td {
-    border: 1px solid #333;
-    padding: 8px;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
 }
 
-.clearAll {
-    width: 100%;
-    background: #e84118;
-    color: white;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 6px;
-    font-size: 18px;
+th {
+  background: #f0f0f0;
 }
