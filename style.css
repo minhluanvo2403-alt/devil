@@ -110,11 +110,11 @@ body{
   border:2px solid var(--pill-border);
   padding:18px;
   text-align:center;
-  font-size:28px;
+  font-size:25px;
   border-radius:12px;
   margin-top:12px;
   color:#cfcfcf;
-  font-weight:700;
+  font-weight:500;
 }
 
 /* === KEYPAD === */
