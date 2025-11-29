@@ -189,3 +189,53 @@ body{
 }
 
 .hidden{display:none}
+/* (GIỮ NGUYÊN TOÀN BỘ CSS CŨ BẠN ĐANG DÙNG) */
+/* ---- THÊM PHẦN DƯỚI ---- */
+
+.top-history-title {
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+#historyDate {
+  font-size:13px;
+  color:#777;
+  font-weight:600;
+  margin-left:4px;
+}
+
+.group-day {
+  background:#f6f7fb;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:12px;
+}
+
+.group-day-title {
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.group-type {
+  background:#fff;
+  padding:8px;
+  border-radius:10px;
+  border:1px solid #eee;
+  margin-bottom:6px;
+}
+
+.group-type-head {
+  font-weight:800;
+  margin-bottom:4px;
+}
+
+.group-rows {
+  padding-left:8px;
+}
+
+.group-row {
+  padding:4px 0;
+  font-size:15px;
+  border-bottom:1px dashed #eee;
+}
