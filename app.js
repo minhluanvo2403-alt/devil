@@ -200,16 +200,16 @@ function deleteRecord(id){
 }
 
 
-/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ */
+/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ (MỚI → CŨ) */
 function renderHistory() {
   historyTable.innerHTML = "";
 
   if (!currentType) return;
 
-  // Lọc theo loại THÁI/RI
+  // Lọc theo loại THÁI/RI và SẮP XẾP MỚI → CŨ
   const list = records
     .filter(r => r.type === currentType)
-    .sort((a, b) => a.id - b.id);
+    .sort((a, b) => b.id - a.id);   // <<< SỬA TẠI ĐÂY
 
   // Tạo 3 cột riêng
   const colA = list.filter(r => r.cat === "A");
@@ -261,6 +261,7 @@ function renderHistory() {
     historyTable.appendChild(row);
   }
 }
+
 
 
 /* CLEAR ALL */
