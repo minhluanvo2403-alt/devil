@@ -1,6 +1,6 @@
 {
-  "name": "Ghi Số Sầu Riêng",
-  "short_name": "Sầu Riêng",
+  "name": "Ghi cân Sầu Riêng",
+  "short_name": "Ghi cân",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#4DA6FF",
