@@ -2,11 +2,8 @@ const CACHE = "sr-cache-v1";
 const FILES = [
   "index.html",
   "style.css",
-  "app.js",
-  "manifest.json",
-  "icon-192.png",
-  "icon-512.png",
-  "apple-touch-icon.png"
+  "app.js"
+  // KHÔNG CACHE manifest hoặc icon
 ];
 
 self.addEventListener("install", e => {
@@ -15,8 +12,9 @@ self.addEventListener("install", e => {
   );
 });
 
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request).then(resp => resp || fetch(e.request))
+// DÙNG NETWORK FIRST để icon, manifest luôn cập nhật
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
