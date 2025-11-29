@@ -1,72 +1,59 @@
 const LS_KEY = "dr_records";
-
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+
 let currentType = null;
-let currentCat = null;
-let inputValue = "";
+let currentCat  = null;
+let inputValue  = "";
 
 // ELEMENTS
 const dateInput = document.getElementById("dateInput");
 const datePill  = document.getElementById("datePill");
-
-const typeBtns = document.querySelectorAll(".type-btn");
-const catBtns  = document.querySelectorAll(".cat-btn");
-const display  = document.getElementById("display");
+const typeBtns  = document.querySelectorAll(".type-btn");
+const catBtns   = document.querySelectorAll(".cat-btn");
+const display   = document.getElementById("display");
 
 const sumA = document.getElementById("sumA");
 const sumB = document.getElementById("sumB");
 const sumC = document.getElementById("sumC");
 const totalAll = document.getElementById("totalAll");
 
-const btnBack  = document.getElementById("btnBack");
-const btnEnter = document.getElementById("btnEnter");
-const numBtns  = document.querySelectorAll(".num");
+const historyTable = document.getElementById("historyTable");
+const historyBody  = document.getElementById("historyBody");
+const toggleBtn    = document.getElementById("toggleBtn");
+const clearAllBtn  = document.getElementById("clearAll");
+const historyDate  = document.getElementById("historyDate");
 
-const clearAllBtn = document.getElementById("clearAll");
-const toggleBtn   = document.getElementById("toggleBtn");
-const historyBody = document.getElementById("historyBody");
-const historyList = document.getElementById("historyList");
-const historyDate = document.getElementById("historyDate");
-
-/* ==============================
-      XỬ LÝ HIỂN THỊ NGÀY
-==============================*/
-
+/* DATE INIT */
 function toLocalISO(d){
   const t = new Date(d.getTime() - d.getTimezoneOffset()*60000);
   return t.toISOString().slice(0,10);
 }
-
 dateInput.value = toLocalISO(new Date());
 
 function formatDateReadable(iso){
   const d = new Date(iso);
-  const day = d.getDate();
-  const month = d.toLocaleString("vi-VN",{month:"short"});
-  return `Ngày ${day} ${month}`;
+  return `Ngày ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 }
-function updateDatePill(){ datePill.textContent = formatDateReadable(dateInput.value); }
-updateDatePill();
+datePill.textContent = formatDateReadable(dateInput.value);
+historyDate.textContent = formatDateReadable(dateInput.value);
 
-dateInput.addEventListener("change", updateDatePill);
+dateInput.addEventListener("change", ()=>{
+  datePill.textContent = formatDateReadable(dateInput.value);
+  historyDate.textContent = formatDateReadable(dateInput.value);
+});
 
-/* ==============================
-        CHỌN THÁI / RI
-==============================*/
-
+/* TYPE SELECT */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
     btn.classList.add("active");
     currentType = btn.dataset.type;
     renderSummary();
+    renderHistory();
   });
 });
 
-/* ==============================
-        CHỌN A / B / C
-==============================*/
-
+/* CAT SELECT */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -75,14 +62,11 @@ catBtns.forEach(btn=>{
   });
 });
 
-/* ==============================
-        NHẬP SỐ
-==============================*/
-
-numBtns.forEach(btn=>{
+/* KEYPAD INPUT */
+document.querySelectorAll(".num").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
-      alert("Hãy chọn Thái/Ri và A/B/C trước!");
+      alert("Vui lòng chọn THÁI/RI và A/B/C trước!");
       return;
     }
     inputValue += btn.textContent;
@@ -90,17 +74,14 @@ numBtns.forEach(btn=>{
   });
 });
 
-btnBack.addEventListener("click", ()=>{
+document.getElementById("btnBack").addEventListener("click", ()=>{
   inputValue = inputValue.slice(0,-1);
   updateDisplay();
 });
 
-/* ==============================
-        ENTER = LƯU
-==============================*/
-
-btnEnter.addEventListener("click", ()=>{
-  if(!currentType || !currentCat || !inputValue) return;
+/* ENTER TO SAVE */
+document.getElementById("btnEnter").addEventListener("click", ()=>{
+  if(!inputValue || !currentType || !currentCat) return;
 
   const rec = {
     id: Date.now(),
@@ -111,7 +92,7 @@ btnEnter.addEventListener("click", ()=>{
   };
 
   records.push(rec);
-  save();
+  localStorage.setItem(LS_KEY, JSON.stringify(records));
 
   inputValue = "";
   updateDisplay();
@@ -119,32 +100,21 @@ btnEnter.addEventListener("click", ()=>{
   renderHistory();
 });
 
-/* ==============================
-        UPDATE DISPLAY
-==============================*/
-
+/* DISPLAY */
 function updateDisplay(){
   display.textContent = inputValue || "SỐ LƯỢNG";
-  display.style.color = inputValue ? "#111" : "#ccc";
+  display.style.color = inputValue ? "#111" : "#cfcfcf";
 }
 
-/* ==============================
-        TÍNH TỔNG
-==============================*/
-
+/* SUMMARY */
 function renderSummary(){
   let A=0,B=0,C=0;
 
-  if(!currentType){
-    sumA.textContent = sumB.textContent = sumC.textContent = totalAll.textContent = 0;
-    return;
-  }
-
   records.forEach(r=>{
-    if(r.type === currentType){
-      if(r.cat === "A") A+=r.qty;
-      if(r.cat === "B") B+=r.qty;
-      if(r.cat === "C") C+=r.qty;
+    if(r.type===currentType){
+      if(r.cat==="A") A+=r.qty;
+      if(r.cat==="B") B+=r.qty;
+      if(r.cat==="C") C+=r.qty;
     }
   });
 
@@ -154,91 +124,50 @@ function renderSummary(){
   totalAll.textContent = A+B+C;
 }
 
-/* ==============================
-        LỊCH SỬ NHÓM THEO NGÀY
-==============================*/
-
-function groupBy(array, key){
-  return array.reduce((obj, item)=>{
-    const k = item[key];
-    if(!obj[k]) obj[k] = [];
-    obj[k].push(item);
-    return obj;
-  },{});
-}
-
+/* HISTORY: TABLE 3 CỘT */
 function renderHistory(){
-  historyList.innerHTML = "";
+  historyTable.innerHTML = "";
 
-  if(records.length === 0) return;
+  const list = records.filter(r=>r.type===currentType).sort((a,b)=>b.id-a.id);
 
-  const groupsByDay = groupBy(records, "date");
-  const sortedDays = Object.keys(groupsByDay).sort().reverse();
+  list.forEach(r=>{
+    const row = document.createElement("tr");
 
-  historyDate.textContent = `Tổng số ngày: ${sortedDays.length}`;
+    const colA = document.createElement("td");
+    const colB = document.createElement("td");
+    const colC = document.createElement("td");
 
-  sortedDays.forEach(day => {
-    const group = groupsByDay[day];
+    if(r.cat==="A") colA.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
+    if(r.cat==="B") colB.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
+    if(r.cat==="C") colC.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
 
-    const dayBox = document.createElement("div");
-    dayBox.className = "group-day";
+    row.appendChild(colA);
+    row.appendChild(colB);
+    row.appendChild(colC);
 
-    const title = document.createElement("div");
-    title.className = "group-day-title";
-    title.textContent = `${formatDateReadable(day)}`;
-    dayBox.appendChild(title);
-
-    const groupsByType = groupBy(group, "type");
-
-    ["thai","ri"].forEach(type=>{
-      if(!groupsByType[type]) return;
-
-      const typeBox = document.createElement("div");
-      typeBox.className = "group-type";
-
-      const h = document.createElement("div");
-      h.className = "group-type-head";
-      h.textContent = type.toUpperCase();
-      typeBox.appendChild(h);
-
-      const rows = document.createElement("div");
-      rows.className = "group-rows";
-
-      ["A","B","C"].forEach(cat=>{
-        const items = groupsByType[type].filter(r=>r.cat===cat);
-        if(items.length){
-          const total = items.reduce((t,x)=>t+x.qty,0);
-
-          const r = document.createElement("div");
-          r.className = "group-row";
-          r.textContent = `${cat}: ${total}`;
-          rows.appendChild(r);
-        }
-      });
-
-      typeBox.appendChild(rows);
-      dayBox.appendChild(typeBox);
-    });
-
-    historyList.appendChild(dayBox);
+    historyTable.appendChild(row);
   });
 }
 
-/* ==============================
-        CLEAR + TOGGLE
-==============================*/
+/* DELETE ONE */
+function del(id){
+  records = records.filter(r=>r.id!==id);
+  localStorage.setItem(LS_KEY, JSON.stringify(records));
+  renderSummary();
+  renderHistory();
+}
 
-function save(){ localStorage.setItem(LS_KEY, JSON.stringify(records)); }
-
+/* CLEAR ALL */
 clearAllBtn.addEventListener("click", ()=>{
-  if(confirm("Xoá toàn bộ dữ liệu?")){
-    records = [];
-    save();
+  if(confirm("Xoá toàn bộ lịch sử?")){
+    records=[];
+    localStorage.setItem(LS_KEY, "[]");
     renderSummary();
     renderHistory();
   }
 });
 
+/* TOGGLE */
 toggleBtn.addEventListener("click", ()=>{
   historyBody.classList.toggle("hidden");
   toggleBtn.textContent = historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
