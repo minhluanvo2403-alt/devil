@@ -8,9 +8,18 @@
 </head>
 <body>
 
+<!-- MÀN HÌNH NHẬP MẬT KHẨU -->
+<div id="passwordScreen" class="pw-screen hidden">
+  <div class="pw-box">
+    <h2>Nhập mật khẩu</h2>
+    <input id="pwInput" type="password" maxlength="20" placeholder="Nhập mật khẩu" />
+    <button id="pwLoginBtn">Mở ứng dụng</button>
+  </div>
+</div>
+
 <main class="screen">
 
-  <!-- NGÀY + THÁI / RI -->
+  <!-- NGÀY + THÁI/RI -->
   <section class="card card-top">
 
     <div class="date-wrapper">
@@ -38,7 +47,7 @@
     </div>
   </section>
 
-  <!-- CHỌN A/B/C + INPUT -->
+  <!-- CHỌN A/B/C + DISPLAY -->
   <section class="card card-input">
     <div class="select-row">
       <button class="btn-select cat-btn" data-cat="A">A</button>
@@ -50,7 +59,7 @@
   </section>
 
   <!-- KEYPAD -->
-  <nav class="keypad" id="keypad">
+  <nav class="keypad">
     <button class="kbtn num">1</button>
     <button class="kbtn num">2</button>
     <button class="kbtn num">3</button>
@@ -67,7 +76,6 @@
 
   <!-- LỊCH SỬ -->
   <section class="card card-history">
-
     <header class="history-header">
       <div class="top-history-title">
         <div class="hist-title">LỊCH SỬ NHẬP</div>
@@ -92,7 +100,6 @@
         <tbody id="historyTable"></tbody>
       </table>
     </div>
-
   </section>
 
 </main>
