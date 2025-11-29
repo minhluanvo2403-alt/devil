@@ -17,10 +17,8 @@ body{
   padding:12px;
 }
 
-.screen{
-  max-width:420px;
-  margin:auto;
-}
+/* MAIN */
+.screen{ max-width:420px; margin:auto; }
 
 .card{
   background:#fff;
@@ -30,7 +28,12 @@ body{
   margin-bottom:18px;
 }
 
-/* ========== NGÀY THÁNG ========== */
+/* === NGÀY === */
+
+.date-wrapper{
+  position:relative;
+}
+
 .date-pill{
   background:var(--muted);
   padding:16px;
@@ -38,11 +41,19 @@ body{
   font-weight:600;
   text-align:center;
   margin-bottom:12px;
-  font-size:18px;
 }
-.date-hidden{ display:none; }
 
-/* ========== NÚT CHỌN THÁI / RI / A / B / C ========== */
+.date-input-real{
+  position:absolute;
+  width:100%;
+  height:100%;
+  left:0; top:0;
+  opacity:0;
+  cursor:pointer;
+}
+
+/* === NÚT CHỌN === */
+
 .select-row{
   display:flex;
   gap:12px;
@@ -55,7 +66,7 @@ body{
   border:1px solid var(--pill-border);
   background:white;
   font-weight:700;
-  font-size:28px;    /* <<< SỬA THEO YÊU CẦU */
+  font-size:28px;   /* size lớn bằng ô hiển thị */
 }
 
 .btn-select.active{
@@ -64,7 +75,8 @@ body{
   border-color:var(--accent-strong);
 }
 
-/* ========== TỔNG A/B/C + TỔNG CỘNG ========== */
+/* === TỔNG === */
+
 .totals-row{
   display:flex;
   gap:12px;
@@ -78,15 +90,8 @@ body{
   text-align:center;
 }
 
-.total-pill .label{
-  font-weight:700;
-  font-size:16px;
-}
-
-.total-pill .value{
-  font-size:20px;
-  font-weight:800;
-}
+.total-pill .label{ font-weight:700 }
+.total-pill .value{ font-size:20px; font-weight:800 }
 
 .grand-pill{
   background:#eee;
@@ -98,7 +103,8 @@ body{
   font-size:20px;
 }
 
-/* ========== HIỂN THỊ SỐ ========== */
+/* === DISPLAY === */
+
 .display-slab{
   background:white;
   border:2px solid var(--pill-border);
@@ -109,10 +115,10 @@ body{
   margin-top:12px;
   color:#cfcfcf;
   font-weight:700;
-  min-height:62px;
 }
 
-/* ========== BÀN PHÍM SỐ (KHÔNG CỐ ĐỊNH) ========== */
+/* === KEYPAD === */
+
 .keypad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -127,11 +133,12 @@ body{
   font-weight:800;
   border:none;
   font-size:22px;
-  color:#000;       /* <<< SỬA THEO YÊU CẦU (màu đen) */
+  color:#000; /* màu đen đúng yêu cầu */
   box-shadow:0 6px 12px rgba(0,0,0,0.04);
 }
 
-/* ========== LỊCH SỬ NHẬP ========== */
+/* === LỊCH SỬ === */
+
 .history-header{
   display:flex;
   justify-content:space-between;
@@ -164,7 +171,6 @@ body{
   font-weight:700;
 }
 
-/* ========== BẢNG LỊCH SỬ 3 CỘT ========== */
 .history-table{
   width:100%;
   border-collapse:collapse;
