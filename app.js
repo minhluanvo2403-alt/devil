@@ -1,6 +1,44 @@
-/* ===============================
-      GHI SỐ SẦU RIÊNG - APP.JS
-   =============================== */
+/* =========================================
+        CHẶN SAFARI - CHỈ CHẠY PWA
+   ========================================= */
+if (!window.matchMedia('(display-mode: standalone)').matches &&
+    !navigator.standalone) {
+    document.body.innerHTML = `
+        <div style="padding:20px; font-size:22px; text-align:center;">
+            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+            Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
+        </div>
+    `;
+}
+
+/* =========================================
+                 MẬT KHẨU
+   ========================================= */
+
+const APP_PASSWORD = "minhluan";
+
+const pwScreen   = document.getElementById("passwordScreen");
+const pwInput    = document.getElementById("pwInput");
+const pwLoginBtn = document.getElementById("pwLoginBtn");
+
+// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
+if (!localStorage.getItem("auth_ok")) {
+    pwScreen.classList.remove("hidden");
+}
+
+pwLoginBtn.addEventListener("click", ()=>{
+    if (pwInput.value.trim() === APP_PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+        pwScreen.classList.add("hidden");
+    } else {
+        alert("Sai mật khẩu!");
+    }
+});
+
+
+/* =========================================
+                GHI SỐ - CHÍNH
+   ========================================= */
 
 const LS_KEY = "dr_records";
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
@@ -9,10 +47,9 @@ let currentType = null;
 let currentCat  = null;
 let inputValue  = "";
 
-// ===== ELEMENTS =====
+// ELEMENTS
 const dateInput = document.getElementById("dateInput");
 const datePill  = document.getElementById("datePill");
-
 const typeBtns  = document.querySelectorAll(".type-btn");
 const catBtns   = document.querySelectorAll(".cat-btn");
 const display   = document.getElementById("display");
@@ -28,16 +65,14 @@ const toggleBtn    = document.getElementById("toggleBtn");
 const clearAllBtn  = document.getElementById("clearAll");
 const historyDate  = document.getElementById("historyDate");
 
-/* ===============================
-            FORMAT SỐ
-   =============================== */
+
+/* FORMAT */
 function fmt(n){
   return n.toLocaleString('vi-VN');
 }
 
-/* ===============================
-            NGÀY THÁNG
-   =============================== */
+
+/* NGÀY */
 function toLocalISO(d){
   return new Date(d.getTime() - d.getTimezoneOffset()*60000)
         .toISOString().slice(0,10);
@@ -58,9 +93,8 @@ dateInput.addEventListener("change", ()=>{
   historyDate.textContent = fDate(dateInput.value);
 });
 
-/* ===============================
-        CHỌN LOẠI THÁI / RI
-   =============================== */
+
+/* LOẠI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -73,9 +107,8 @@ typeBtns.forEach(btn=>{
   });
 });
 
-/* ===============================
-        CHỌN A / B / C
-   =============================== */
+
+/* A/B/C */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -85,14 +118,12 @@ catBtns.forEach(btn=>{
   });
 });
 
-/* ===============================
-           BÀN PHÍM SỐ
-   =============================== */
 
+/* KEYPAD */
 document.querySelectorAll(".num").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
-      alert("Vui lòng chọn THÁI/RI và A/B/C trước!");
+      alert("Vui lòng chọn THÁI/RI và A/B/C!");
       return;
     }
     inputValue += btn.textContent;
@@ -105,9 +136,8 @@ document.getElementById("btnBack").addEventListener("click", ()=>{
   updateDisplay();
 });
 
-/* ===============================
-             ENTER LƯU
-   =============================== */
+
+/* ENTER LƯU */
 document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(!inputValue || !currentType || !currentCat) return;
 
@@ -128,9 +158,8 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
   renderHistory();
 });
 
-/* ===============================
-       HIỂN THỊ SỐ LƯỢNG
-   =============================== */
+
+/* DISPLAY */
 function updateDisplay(){
   if(!inputValue){
     display.textContent = "SỐ LƯỢNG";
@@ -141,14 +170,13 @@ function updateDisplay(){
   }
 }
 
-/* ===============================
-             TÍNH TỔNG
-   =============================== */
+
+/* SUMMARY */
 function renderSummary(){
   let A=0,B=0,C=0;
 
   records.forEach(r=>{
-    if(r.type === currentType){
+    if(r.type===currentType){
       if(r.cat==="A") A+=r.qty;
       if(r.cat==="B") B+=r.qty;
       if(r.cat==="C") C+=r.qty;
@@ -158,12 +186,11 @@ function renderSummary(){
   sumA.textContent = fmt(A);
   sumB.textContent = fmt(B);
   sumC.textContent = fmt(C);
-  totalAll.textContent = fmt(A + B + C);
+  totalAll.textContent = fmt(A+B+C);
 }
 
-/* ===============================
-        XÓA MỘT DÒNG LỊCH SỬ
-   =============================== */
+
+/* LỊCH SỬ */
 function deleteRecord(id){
   records = records.filter(r => r.id !== id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
@@ -171,42 +198,40 @@ function deleteRecord(id){
   renderHistory();
 }
 
-/* ===============================
-      LỊCH SỬ 3 CỘT A/B/C
-   =============================== */
+
 function renderHistory(){
   historyTable.innerHTML = "";
+
+  if(!currentType) return;
 
   const list = records
     .filter(r => r.type === currentType)
     .sort((a,b)=>b.id-a.id);
 
   list.forEach(r=>{
+
     const row = document.createElement("tr");
 
     const colA = document.createElement("td");
     const colB = document.createElement("td");
     const colC = document.createElement("td");
 
-    // Tạo nút X
-    const mkDelBtn = ()=>{
-      const b = document.createElement("span");
-      b.textContent = "X";
-      b.className = "del-btn";
-      b.addEventListener("click", ()=> deleteRecord(r.id));
-      return b;
-    };
+    function mkDelBtn(){
+      const x = document.createElement("span");
+      x.className = "del-btn";
+      x.textContent = "X";
+      x.addEventListener("click",()=>deleteRecord(r.id));
+      return x;
+    }
 
     if(r.cat==="A"){
       colA.textContent = fmt(r.qty);
       colA.appendChild(mkDelBtn());
     }
-
     if(r.cat==="B"){
       colB.textContent = fmt(r.qty);
       colB.appendChild(mkDelBtn());
     }
-
     if(r.cat==="C"){
       colC.textContent = fmt(r.qty);
       colC.appendChild(mkDelBtn());
@@ -220,11 +245,10 @@ function renderHistory(){
   });
 }
 
-/* ===============================
-           XÓA TOÀN BỘ
-   =============================== */
+
+/* CLEAR ALL */
 clearAllBtn.addEventListener("click", ()=>{
-  if(confirm("Xoá toàn bộ lịch sử?")){
+  if(confirm("Xoá toàn bộ dữ liệu?")){
     records = [];
     localStorage.setItem(LS_KEY, "[]");
     renderSummary();
@@ -232,18 +256,16 @@ clearAllBtn.addEventListener("click", ()=>{
   }
 });
 
-/* ===============================
-             ẨN / HIỆN
-   =============================== */
+
+/* SHOW / HIDE HISTORY */
 toggleBtn.addEventListener("click", ()=>{
   historyBody.classList.toggle("hidden");
   toggleBtn.textContent =
     historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
 });
 
-/* ===============================
-               INIT
-   =============================== */
+
+/* INIT */
 updateDisplay();
 renderSummary();
 renderHistory();
