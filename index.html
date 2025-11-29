@@ -24,18 +24,9 @@
     <!-- CARD: totals -->
     <section class="card card-totals">
       <div class="totals-row">
-        <div class="total-pill">
-          <div class="label">A</div>
-          <div class="value" id="sumA">0</div>
-        </div>
-        <div class="total-pill">
-          <div class="label">B</div>
-          <div class="value" id="sumB">0</div>
-        </div>
-        <div class="total-pill">
-          <div class="label">C</div>
-          <div class="value" id="sumC">0</div>
-        </div>
+        <div class="total-pill"><div class="label">A</div><div class="value" id="sumA">0</div></div>
+        <div class="total-pill"><div class="label">B</div><div class="value" id="sumB">0</div></div>
+        <div class="total-pill"><div class="label">C</div><div class="value" id="sumC">0</div></div>
       </div>
 
       <div class="grand-pill">
@@ -55,20 +46,17 @@
       <div class="display-slab" id="display">SỐ LƯỢNG</div>
     </section>
 
-    <!-- KEYPAD (KHÔNG CỐ ĐỊNH) -->
+    <!-- KEYPAD -->
     <nav class="keypad" id="keypad">
       <button class="kbtn num">1</button>
       <button class="kbtn num">2</button>
       <button class="kbtn num">3</button>
-
       <button class="kbtn num">4</button>
       <button class="kbtn num">5</button>
       <button class="kbtn num">6</button>
-
       <button class="kbtn num">7</button>
       <button class="kbtn num">8</button>
       <button class="kbtn num">9</button>
-
       <button class="kbtn action" id="btnBack">⌫</button>
       <button class="kbtn num">0</button>
       <button class="kbtn action" id="btnEnter">↵</button>
@@ -76,8 +64,13 @@
 
     <!-- HISTORY -->
     <section class="card card-history" id="historyCard">
-      <header class="history-header" id="historyToggle">
-        <div> LỊCH SỬ NHẬP </div>
+
+      <header class="history-header">
+        <div class="top-history-title">
+          <div class="hist-title">LỊCH SỬ NHẬP</div>
+          <div id="historyDate">Ngày …</div>
+        </div>
+
         <div class="history-actions">
           <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
           <button id="toggleBtn" class="small-btn">ẨN</button>
@@ -85,20 +78,7 @@
       </header>
 
       <div class="history-body" id="historyBody">
-        <div class="history-columns">
-          <div class="col">
-            <h4>A</h4>
-            <ul id="hisA" class="entries"></ul>
-          </div>
-          <div class="col">
-            <h4>B</h4>
-            <ul id="hisB" class="entries"></ul>
-          </div>
-          <div class="col">
-            <h4>C</h4>
-            <ul id="hisC" class="entries"></ul>
-          </div>
-        </div>
+        <div id="historyList"></div>
       </div>
     </section>
 
