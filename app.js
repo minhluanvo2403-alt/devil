@@ -1,77 +1,72 @@
-/* app.js
- - records persisted in localStorage under "dr_records"
- - each record: {id, date, type: "thai"|"ri", cat: "A"|"B"|"C", qty}
-*/
-
 const LS_KEY = "dr_records";
 
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
 let currentType = null;
 let currentCat = null;
-let inputValue = ""; // string for display
+let inputValue = "";
 
-// elements
+// ELEMENTS
 const dateInput = document.getElementById("dateInput");
-const datePill = document.getElementById("datePill");
+const datePill  = document.getElementById("datePill");
+
 const typeBtns = document.querySelectorAll(".type-btn");
-const catBtns = document.querySelectorAll(".cat-btn");
-const display = document.getElementById("display");
+const catBtns  = document.querySelectorAll(".cat-btn");
+const display  = document.getElementById("display");
+
 const sumA = document.getElementById("sumA");
 const sumB = document.getElementById("sumB");
 const sumC = document.getElementById("sumC");
 const totalAll = document.getElementById("totalAll");
 
-const hisA = document.getElementById("hisA");
-const hisB = document.getElementById("hisB");
-const hisC = document.getElementById("hisC");
-
-const btnsNum = document.querySelectorAll(".num");
-const btnBack = document.getElementById("btnBack");
+const btnBack  = document.getElementById("btnBack");
 const btnEnter = document.getElementById("btnEnter");
-const clearAllBtn = document.getElementById("clearAll");
-const toggleBtn = document.getElementById("toggleBtn");
-const historyBody = document.getElementById("historyBody");
+const numBtns  = document.querySelectorAll(".num");
 
-// init date to today
+const clearAllBtn = document.getElementById("clearAll");
+const toggleBtn   = document.getElementById("toggleBtn");
+const historyBody = document.getElementById("historyBody");
+const historyList = document.getElementById("historyList");
+const historyDate = document.getElementById("historyDate");
+
+/* ==============================
+      XỬ LÝ HIỂN THỊ NGÀY
+==============================*/
+
 function toLocalISO(d){
   const t = new Date(d.getTime() - d.getTimezoneOffset()*60000);
   return t.toISOString().slice(0,10);
 }
-dateInput.value = toLocalISO(new Date());
-updateDatePill();
 
-// format date pill like "ngày 29 thg 11, 2025"
+dateInput.value = toLocalISO(new Date());
+
 function formatDateReadable(iso){
-  if(!iso) return "";
   const d = new Date(iso);
   const day = d.getDate();
-  const month = d.toLocaleString('vi-VN',{month:'short'});
-  const year = d.getFullYear();
-  return `ngày ${day} ${month} ${year}`;
+  const month = d.toLocaleString("vi-VN",{month:"short"});
+  return `Ngày ${day} ${month}`;
 }
-function updateDatePill(){
-  datePill.textContent = formatDateReadable(dateInput.value);
-}
+function updateDatePill(){ datePill.textContent = formatDateReadable(dateInput.value); }
+updateDatePill();
 
-// date change handler
-dateInput.addEventListener("change", () => {
-  updateDatePill();
-});
+dateInput.addEventListener("change", updateDatePill);
 
-// TYPE buttons
+/* ==============================
+        CHỌN THÁI / RI
+==============================*/
+
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
     btn.classList.add("active");
     currentType = btn.dataset.type;
-    // reset display placeholder text style if no input
-    if(!inputValue) display.classList.remove("has-value");
     renderSummary();
-    renderHistory();
   });
 });
 
-// CAT buttons
+/* ==============================
+        CHỌN A / B / C
+==============================*/
+
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -80,153 +75,176 @@ catBtns.forEach(btn=>{
   });
 });
 
-// numbers press
-btnsNum.forEach(b=>{
-  b.addEventListener("click", ()=>{
-    // require selections
+/* ==============================
+        NHẬP SỐ
+==============================*/
+
+numBtns.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
-      alert("Vui lòng chọn THÁI/RI và A/B/C trước khi nhập.");
+      alert("Hãy chọn Thái/Ri và A/B/C trước!");
       return;
     }
-    // append digit (prevent leading zeros if desired)
-    inputValue = inputValue === "0" ? b.textContent : inputValue + b.textContent;
+    inputValue += btn.textContent;
     updateDisplay();
   });
 });
 
-// backspace
 btnBack.addEventListener("click", ()=>{
-  if(inputValue.length>0){
-    inputValue = inputValue.slice(0,-1);
-    updateDisplay();
-  }
+  inputValue = inputValue.slice(0,-1);
+  updateDisplay();
 });
 
-// enter: save record
+/* ==============================
+        ENTER = LƯU
+==============================*/
+
 btnEnter.addEventListener("click", ()=>{
-  if(!currentType || !currentCat){
-    alert("Vui lòng chọn THÁI/RI và A/B/C trước khi nhập.");
-    return;
-  }
-  if(!inputValue) return;
+  if(!currentType || !currentCat || !inputValue) return;
+
   const rec = {
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
-    date: dateInput.value || toLocalISO(new Date()),
+    id: Date.now(),
+    date: dateInput.value,
     type: currentType,
     cat: currentCat,
     qty: Number(inputValue)
   };
+
   records.push(rec);
-  saveRecords();
+  save();
+
   inputValue = "";
   updateDisplay();
   renderSummary();
   renderHistory();
 });
 
-// update display
+/* ==============================
+        UPDATE DISPLAY
+==============================*/
+
 function updateDisplay(){
-  if(!inputValue){
-    display.textContent = "SỐ LƯỢNG";
-    display.style.color = "#cfcfcf";
-    display.classList.remove("has-value");
-  } else {
-    display.textContent = inputValue;
-    display.style.color = "#111";
-    display.classList.add("has-value");
-  }
+  display.textContent = inputValue || "SỐ LƯỢNG";
+  display.style.color = inputValue ? "#111" : "#ccc";
 }
 
-// summary by currentType
+/* ==============================
+        TÍNH TỔNG
+==============================*/
+
 function renderSummary(){
   let A=0,B=0,C=0;
+
   if(!currentType){
-    sumA.textContent = 0; sumB.textContent = 0; sumC.textContent = 0; totalAll.textContent = 0;
+    sumA.textContent = sumB.textContent = sumC.textContent = totalAll.textContent = 0;
     return;
   }
+
   records.forEach(r=>{
     if(r.type === currentType){
-      if(r.cat === "A") A += r.qty;
-      if(r.cat === "B") B += r.qty;
-      if(r.cat === "C") C += r.qty;
+      if(r.cat === "A") A+=r.qty;
+      if(r.cat === "B") B+=r.qty;
+      if(r.cat === "C") C+=r.qty;
     }
   });
+
   sumA.textContent = A;
   sumB.textContent = B;
   sumC.textContent = C;
-  totalAll.textContent = A + B + C;
+  totalAll.textContent = A+B+C;
 }
 
-// render history (only for currentType)
-function renderHistory(){
-  hisA.innerHTML = ""; hisB.innerHTML = ""; hisC.innerHTML = "";
-  if(!currentType) return;
-  // show latest first
-  const filtered = records.filter(r => r.type === currentType).slice().reverse();
-  filtered.forEach(r=>{
-    const li = document.createElement("li");
-    const meta = document.createElement("div");
-    meta.className = "meta";
-    meta.textContent = `${formatDateReadable(r.date)} `;
-    const qty = document.createElement("strong");
-    qty.textContent = `${r.qty}`;
-    qty.style.marginRight = "8px";
+/* ==============================
+        LỊCH SỬ NHÓM THEO NGÀY
+==============================*/
 
-    const del = document.createElement("button");
-    del.className = "del";
-    del.textContent = "X";
-    del.title = "Xoá";
-    del.addEventListener("click", ()=>{
-      // delete this record by id
-      records = records.filter(x => x.id !== r.id);
-      saveRecords();
-      renderSummary();
-      renderHistory();
+function groupBy(array, key){
+  return array.reduce((obj, item)=>{
+    const k = item[key];
+    if(!obj[k]) obj[k] = [];
+    obj[k].push(item);
+    return obj;
+  },{});
+}
+
+function renderHistory(){
+  historyList.innerHTML = "";
+
+  if(records.length === 0) return;
+
+  const groupsByDay = groupBy(records, "date");
+  const sortedDays = Object.keys(groupsByDay).sort().reverse();
+
+  historyDate.textContent = `Tổng số ngày: ${sortedDays.length}`;
+
+  sortedDays.forEach(day => {
+    const group = groupsByDay[day];
+
+    const dayBox = document.createElement("div");
+    dayBox.className = "group-day";
+
+    const title = document.createElement("div");
+    title.className = "group-day-title";
+    title.textContent = `${formatDateReadable(day)}`;
+    dayBox.appendChild(title);
+
+    const groupsByType = groupBy(group, "type");
+
+    ["thai","ri"].forEach(type=>{
+      if(!groupsByType[type]) return;
+
+      const typeBox = document.createElement("div");
+      typeBox.className = "group-type";
+
+      const h = document.createElement("div");
+      h.className = "group-type-head";
+      h.textContent = type.toUpperCase();
+      typeBox.appendChild(h);
+
+      const rows = document.createElement("div");
+      rows.className = "group-rows";
+
+      ["A","B","C"].forEach(cat=>{
+        const items = groupsByType[type].filter(r=>r.cat===cat);
+        if(items.length){
+          const total = items.reduce((t,x)=>t+x.qty,0);
+
+          const r = document.createElement("div");
+          r.className = "group-row";
+          r.textContent = `${cat}: ${total}`;
+          rows.appendChild(r);
+        }
+      });
+
+      typeBox.appendChild(rows);
+      dayBox.appendChild(typeBox);
     });
 
-    li.appendChild(qty);
-    li.appendChild(meta);
-    li.appendChild(del);
-
-    if(r.cat === "A") hisA.appendChild(li);
-    if(r.cat === "B") hisB.appendChild(li);
-    if(r.cat === "C") hisC.appendChild(li);
+    historyList.appendChild(dayBox);
   });
 }
 
-// save to localStorage
-function saveRecords(){
-  localStorage.setItem(LS_KEY, JSON.stringify(records));
-}
+/* ==============================
+        CLEAR + TOGGLE
+==============================*/
 
-// clear all
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(records)); }
+
 clearAllBtn.addEventListener("click", ()=>{
-  if(confirm("Xoá toàn bộ dữ liệu?")) {
+  if(confirm("Xoá toàn bộ dữ liệu?")){
     records = [];
-    saveRecords();
+    save();
     renderSummary();
     renderHistory();
   }
 });
 
-// toggle history visible/hidden
 toggleBtn.addEventListener("click", ()=>{
-  if(historyBody.classList.contains("hidden")){
-    historyBody.classList.remove("hidden");
-    toggleBtn.textContent = "ẨN";
-  } else {
-    historyBody.classList.add("hidden");
-    toggleBtn.textContent = "HIỆN";
-  }
+  historyBody.classList.toggle("hidden");
+  toggleBtn.textContent = historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
 });
 
-// click date pill to open native date picker
-datePill.addEventListener("click", ()=>{
-  dateInput.showPicker?.() ?? dateInput.focus();
-});
-
-// on load render
+/* INIT */
 updateDisplay();
 renderSummary();
 renderHistory();
-updateDatePill();
