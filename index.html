@@ -13,10 +13,48 @@
 </head>
 <body>
 
+<!-- ===================== APP ROOT ===================== -->
 <div id="app"></div>
+
+<!-- ===================== LỊCH SỬ ===================== -->
+<div id="history" style="padding: 15px;">
+
+  <h2 style="margin-top: 20px;">📌 Lịch sử THÁI</h2>
+  <table class="history-table" id="thai-table">
+    <thead>
+      <tr>
+        <th>Loại</th>
+        <th>Số ký</th>
+        <th>Giờ</th>
+        <th>Xóa</th>
+      </tr>
+    </thead>
+    <tbody id="thai-history">
+      <!-- nội dung được render bởi app.js -->
+    </tbody>
+  </table>
+
+  <h2 style="margin-top: 30px;">📌 Lịch sử RI</h2>
+  <table class="history-table" id="ri-table">
+    <thead>
+      <tr>
+        <th>Loại</th>
+        <th>Số ký</th>
+        <th>Giờ</th>
+        <th>Xóa</th>
+      </tr>
+    </thead>
+    <tbody id="ri-history">
+      <!-- nội dung được render bởi app.js -->
+    </tbody>
+  </table>
+
+</div>
+
 <script src="./app.js"></script>
 
 <script>
+/* ======================== KIỂM TRA STANDALONE ======================== */
 function isStandalone(){
   return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 }
@@ -28,6 +66,8 @@ if(!isStandalone()){
       <p>Mở Safari → Chia sẻ → Thêm vào Màn hình chính</p>
     </div>`;
 } else {
+
+  /* ======================== MẬT KHẨU APP ======================== */
   const APP_PASSWORD = "devilluan";
 
   if (localStorage.getItem("authenticated") === "true") {
@@ -51,14 +91,9 @@ if(!isStandalone()){
   }
 }
 
+/* ======================== SERVICE WORKER ======================== */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
       .then(() => console.log("SW registered"))
-      .catch(err => console.log("SW failed", err));
-  });
-}
-</script>
-
-</body>
-</html>
+      .ca
