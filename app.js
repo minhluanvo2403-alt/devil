@@ -1,13 +1,19 @@
 /* =========================================
-        CHẶN SAFARI - CHỈ CHẠY PWA
+        KIỂM TRA PWA SAU KHI LOGIN
    ========================================= */
-if (!window.matchMedia('(display-mode: standalone)').matches &&
-    !navigator.standalone) {
-    document.body.innerHTML = `
-        <div style="padding:20px; font-size:22px; text-align:center;">
-            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-        </div>
-    `;
+function checkPWA(){
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      navigator.standalone;
+
+    if (!isStandalone) {
+        document.body.innerHTML = `
+            <div style="padding:20px; font-size:22px; text-align:center;">
+                Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+                Bấm nút <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
+            </div>
+        `;
+    }
 }
 
 /* =========================================
@@ -20,14 +26,20 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
+// nếu chưa login lần đầu → hiện màn hình mật khẩu
 if (!localStorage.getItem("auth_ok")) {
     pwScreen.classList.remove("hidden");
 }
 
 pwLoginBtn.addEventListener("click", ()=>{
     if (pwInput.value.trim() === APP_PASSWORD) {
+
         localStorage.setItem("auth_ok", "1");
         pwScreen.classList.add("hidden");
+
+        // CHỈ CHẶN SAFARI SAU KHI LOGIN
+        checkPWA();
+
     } else {
         alert("Sai mật khẩu!");
     }
