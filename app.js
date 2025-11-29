@@ -1,11 +1,15 @@
 /* =========================================
-        KIỂM TRA CHẠY DƯỚI PWA
+        CHẶN SAFARI - CHỈ CHẠY PWA
    ========================================= */
-function isStandalone() {
-  return window.matchMedia("(display-mode: standalone)").matches ||
-         navigator.standalone;
+if (!window.matchMedia('(display-mode: standalone)').matches &&
+    !navigator.standalone) {
+    document.body.innerHTML = `
+        <div style="padding:20px; font-size:22px; text-align:center;">
+            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+            Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
+        </div>
+    `;
 }
-
 
 /* =========================================
                  MẬT KHẨU
@@ -17,25 +21,15 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-/*
-  QUY ĐỊNH:
-  - Safari → không cần mật khẩu
-  - PWA (icon màn hình chính) → bắt nhập mật khẩu nếu chưa xác nhận
-*/
-
-if (isStandalone()) {
-    if (!localStorage.getItem("auth_ok")) {
-        pwScreen.classList.remove("hidden");
-    }
+// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
+if (!localStorage.getItem("auth_ok")) {
+    pwScreen.classList.remove("hidden");
 }
 
-pwLoginBtn.addEventListener("click", () => {
-
+pwLoginBtn.addEventListener("click", ()=>{
     if (pwInput.value.trim() === APP_PASSWORD) {
-
         localStorage.setItem("auth_ok", "1");
         pwScreen.classList.add("hidden");
-
     } else {
         alert("Sai mật khẩu!");
     }
@@ -43,25 +37,22 @@ pwLoginBtn.addEventListener("click", () => {
 
 
 /* =========================================
-                GHI SỐ - ỨNG DỤNG
+                GHI SỐ - CHÍNH
    ========================================= */
 
-const LS_KEY = "sr_records";
+const LS_KEY = "dr_records";
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
 
-let currentType = null;  // THÁI / RI
-let currentCat  = null;  // A/B/C
-let inputValue  = "";    // số đang nhập
+let currentType = null;
+let currentCat  = null;
+let inputValue  = "";
 
 // ELEMENTS
-const dateInput   = document.getElementById("dateInput");
-const datePill    = document.getElementById("datePill");
-const historyDate = document.getElementById("historyDate");
-
-const typeBtns = document.querySelectorAll(".type-btn");
-const catBtns  = document.querySelectorAll(".cat-btn");
-
-const display = document.getElementById("display");
+const dateInput = document.getElementById("dateInput");
+const datePill  = document.getElementById("datePill");
+const typeBtns  = document.querySelectorAll(".type-btn");
+const catBtns   = document.querySelectorAll(".cat-btn");
+const display   = document.getElementById("display");
 
 const sumA = document.getElementById("sumA");
 const sumB = document.getElementById("sumB");
@@ -72,37 +63,38 @@ const historyTable = document.getElementById("historyTable");
 const historyBody  = document.getElementById("historyBody");
 const toggleBtn    = document.getElementById("toggleBtn");
 const clearAllBtn  = document.getElementById("clearAll");
+const historyDate  = document.getElementById("historyDate");
 
 
-/* ===== FORMAT ===== */
-function fmt(n) {
-    return n.toLocaleString('vi-VN');
+/* FORMAT */
+function fmt(n){
+  return n.toLocaleString('vi-VN');
 }
 
 
-/* ===== NGÀY ===== */
-function toLocalISO(d) {
-    return new Date(d.getTime() - d.getTimezoneOffset()*60000)
+/* NGÀY */
+function toLocalISO(d){
+  return new Date(d.getTime() - d.getTimezoneOffset()*60000)
         .toISOString().slice(0,10);
 }
 
 dateInput.value = toLocalISO(new Date());
 
-function fDate(d) {
-    d = new Date(d);
-    return `Ngày ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+function fDate(d){
+  d = new Date(d);
+  return `Ngày ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 }
 
 datePill.textContent = fDate(dateInput.value);
 historyDate.textContent = fDate(dateInput.value);
 
 dateInput.addEventListener("change", ()=>{
-    datePill.textContent = fDate(dateInput.value);
-    historyDate.textContent = fDate(dateInput.value);
+  datePill.textContent = fDate(dateInput.value);
+  historyDate.textContent = fDate(dateInput.value);
 });
 
 
-/* ===== CHỌN LOẠI THÁI/RI ===== */
+/* LOẠI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -116,7 +108,7 @@ typeBtns.forEach(btn=>{
 });
 
 
-/* ===== CHỌN LOẠI A/B/C ===== */
+/* A/B/C */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -127,171 +119,153 @@ catBtns.forEach(btn=>{
 });
 
 
-/* ===== BÀN PHÍM SỐ ===== */
-document.querySelectorAll(".num").forEach(btn => {
-    btn.addEventListener("click", () => {
-        if (!currentType || !currentCat) {
-            alert("Vui lòng chọn THÁI/RI và A/B/C!");
-            return;
-        }
-        inputValue += btn.textContent;
-        updateDisplay();
-    });
+/* KEYPAD */
+document.querySelectorAll(".num").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    if(!currentType || !currentCat){
+      alert("Vui lòng chọn THÁI/RI và A/B/C!");
+      return;
+    }
+    inputValue += btn.textContent;
+    updateDisplay();
+  });
 });
 
 document.getElementById("btnBack").addEventListener("click", ()=>{
-    inputValue = inputValue.slice(0,-1);
-    updateDisplay();
+  inputValue = inputValue.slice(0,-1);
+  updateDisplay();
 });
 
 
-/* ===== NHẤN ENTER ĐỂ LƯU ===== */
-document.getElementById("btnEnter").addEventListener("click", () => {
+/* ENTER LƯU */
+document.getElementById("btnEnter").addEventListener("click", ()=>{
+  if(!inputValue || !currentType || !currentCat) return;
 
-    if (!inputValue || !currentType || !currentCat) return;
+  const rec = {
+    id: Date.now(),
+    date: dateInput.value,
+    type: currentType,
+    cat: currentCat,
+    qty: Number(inputValue)
+  };
 
-    const rec = {
-        id: Date.now(),
-        date: dateInput.value,
-        type: currentType,
-        cat: currentCat,
-        qty: Number(inputValue)
-    };
+  records.push(rec);
+  localStorage.setItem(LS_KEY, JSON.stringify(records));
 
-    records.push(rec);
-    localStorage.setItem(LS_KEY, JSON.stringify(records));
-
-    inputValue = "";
-    updateDisplay();
-
-    renderSummary();
-    renderHistory();
+  inputValue = "";
+  updateDisplay();
+  renderSummary();
+  renderHistory();
 });
 
 
-/* ===== DISPLAY ===== */
-function updateDisplay() {
-    if (!inputValue) {
-        display.textContent = "SỐ LƯỢNG";
-        display.style.color = "#cfcfcf";
-    } else {
-        display.textContent = fmt(Number(inputValue));
-        display.style.color = "#111";
+/* DISPLAY */
+function updateDisplay(){
+  if(!inputValue){
+    display.textContent = "SỐ LƯỢNG";
+    display.style.color = "#cfcfcf";
+  } else {
+    display.textContent = fmt(Number(inputValue));
+    display.style.color = "#111";
+  }
+}
+
+
+/* SUMMARY */
+function renderSummary(){
+  let A=0,B=0,C=0;
+
+  records.forEach(r=>{
+    if(r.type===currentType){
+      if(r.cat==="A") A+=r.qty;
+      if(r.cat==="B") B+=r.qty;
+      if(r.cat==="C") C+=r.qty;
     }
+  });
+
+  sumA.textContent = fmt(A);
+  sumB.textContent = fmt(B);
+  sumC.textContent = fmt(C);
+  totalAll.textContent = fmt(A+B+C);
 }
 
 
-/* ===== TÍNH TỔNG ===== */
-function renderSummary() {
-    let A = 0, B = 0, C = 0;
-
-    records.forEach(r => {
-        if (r.type === currentType) {
-            if (r.cat === "A") A += r.qty;
-            if (r.cat === "B") B += r.qty;
-            if (r.cat === "C") C += r.qty;
-        }
-    });
-
-    sumA.textContent = fmt(A);
-    sumB.textContent = fmt(B);
-    sumC.textContent = fmt(C);
-    totalAll.textContent = fmt(A+B+C);
+/* LỊCH SỬ */
+function deleteRecord(id){
+  records = records.filter(r => r.id !== id);
+  localStorage.setItem(LS_KEY, JSON.stringify(records));
+  renderSummary();
+  renderHistory();
 }
 
 
-/* ===== XOÁ 1 RECORD ===== */
-function deleteRecord(id) {
-    records = records.filter(r => r.id !== id);
-    localStorage.setItem(LS_KEY, JSON.stringify(records));
+function renderHistory(){
+  historyTable.innerHTML = "";
 
-    renderSummary();
-    renderHistory();
-}
+  if(!currentType) return;
 
+  const list = records
+    .filter(r => r.type === currentType)
+    .sort((a,b)=>b.id-a.id);
 
-/* ===== LỊCH SỬ 3 CỘT ===== */
-function renderHistory() {
+  list.forEach(r=>{
 
-    historyTable.innerHTML = "";
-    if (!currentType) return;
+    const row = document.createElement("tr");
 
-    const list = records
-        .filter(r => r.type === currentType)
-        .sort((a,b)=> b.id - a.id);
+    const colA = document.createElement("td");
+    const colB = document.createElement("td");
+    const colC = document.createElement("td");
 
-    const colA = list.filter(r => r.cat === "A");
-    const colB = list.filter(r => r.cat === "B");
-    const colC = list.filter(r => r.cat === "C");
-
-    const maxRows = Math.max(colA.length, colB.length, colC.length);
-
-    for (let i=0; i<maxRows; i++) {
-
-        const row = document.createElement("tr");
-
-        // A
-        const tdA = document.createElement("td");
-        if (colA[i]) {
-            tdA.textContent = fmt(colA[i].qty);
-            const del = document.createElement("span");
-            del.textContent = " X";
-            del.className = "del-btn";
-            del.onclick = ()=> deleteRecord(colA[i].id);
-            tdA.appendChild(del);
-        }
-
-        // B
-        const tdB = document.createElement("td");
-        if (colB[i]) {
-            tdB.textContent = fmt(colB[i].qty);
-            const del = document.createElement("span");
-            del.textContent = " X";
-            del.className = "del-btn";
-            del.onclick = ()=> deleteRecord(colB[i].id);
-            tdB.appendChild(del);
-        }
-
-        // C
-        const tdC = document.createElement("td");
-        if (colC[i]) {
-            tdC.textContent = fmt(colC[i].qty);
-            const del = document.createElement("span");
-            del.textContent = " X";
-            del.className = "del-btn";
-            del.onclick = ()=> deleteRecord(colC[i].id);
-            tdC.appendChild(del);
-        }
-
-        row.appendChild(tdA);
-        row.appendChild(tdB);
-        row.appendChild(tdC);
-
-        historyTable.appendChild(row);
+    function mkDelBtn(){
+      const x = document.createElement("span");
+      x.className = "del-btn";
+      x.textContent = "X";
+      x.addEventListener("click",()=>deleteRecord(r.id));
+      return x;
     }
+
+    if(r.cat==="A"){
+      colA.textContent = fmt(r.qty);
+      colA.appendChild(mkDelBtn());
+    }
+    if(r.cat==="B"){
+      colB.textContent = fmt(r.qty);
+      colB.appendChild(mkDelBtn());
+    }
+    if(r.cat==="C"){
+      colC.textContent = fmt(r.qty);
+      colC.appendChild(mkDelBtn());
+    }
+
+    row.appendChild(colA);
+    row.appendChild(colB);
+    row.appendChild(colC);
+
+    historyTable.appendChild(row);
+  });
 }
 
 
-/* ========= XÓA TẤT CẢ ========= */
+/* CLEAR ALL */
 clearAllBtn.addEventListener("click", ()=>{
-  if (confirm("Xoá toàn bộ dữ liệu?")) {
-      records = [];
-      localStorage.setItem(LS_KEY, "[]");
-
-      renderSummary();
-      renderHistory();
+  if(confirm("Xoá toàn bộ dữ liệu?")){
+    records = [];
+    localStorage.setItem(LS_KEY, "[]");
+    renderSummary();
+    renderHistory();
   }
 });
 
 
-/* ========= ẨN / HIỆN LỊCH SỬ ========= */
+/* SHOW / HIDE HISTORY */
 toggleBtn.addEventListener("click", ()=>{
-    historyBody.classList.toggle("hidden");
-    toggleBtn.textContent = historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
+  historyBody.classList.toggle("hidden");
+  toggleBtn.textContent =
+    historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
 });
 
 
-/* ========= KHỞI ĐỘNG ========= */
+/* INIT */
 updateDisplay();
 renderSummary();
 renderHistory();
