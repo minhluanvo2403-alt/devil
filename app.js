@@ -40,7 +40,7 @@ pwLoginBtn.addEventListener("click", ()=>{
                 GHI SỐ - CHÍNH
    ========================================= */
 
-const LS_KEY = "dr_records";
+const LS_KEY = "sr_records";
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
 
 let currentType = null;
@@ -94,7 +94,7 @@ dateInput.addEventListener("change", ()=>{
 });
 
 
-/* LOẠI */
+/* LOẠI THÁI / RI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -108,7 +108,7 @@ typeBtns.forEach(btn=>{
 });
 
 
-/* A/B/C */
+/* A / B / C */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -143,6 +143,7 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
 
   const rec = {
     id: Date.now(),
+    group: Date.now(), // giữ group riêng cho mỗi record (không gộp cứng)
     date: dateInput.value,
     type: currentType,
     cat: currentCat,
@@ -190,7 +191,7 @@ function renderSummary(){
 }
 
 
-/* LỊCH SỬ */
+/* XÓA TỪNG RECORD */
 function deleteRecord(id){
   records = records.filter(r => r.id !== id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
@@ -199,50 +200,66 @@ function deleteRecord(id){
 }
 
 
-function renderHistory(){
+/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ */
+function renderHistory() {
   historyTable.innerHTML = "";
 
-  if(!currentType) return;
+  if (!currentType) return;
 
+  // Lọc theo loại THÁI/RI
   const list = records
     .filter(r => r.type === currentType)
-    .sort((a,b)=>b.id-a.id);
+    .sort((a, b) => a.id - b.id);
 
-  list.forEach(r=>{
+  // Tạo 3 cột riêng
+  const colA = list.filter(r => r.cat === "A");
+  const colB = list.filter(r => r.cat === "B");
+  const colC = list.filter(r => r.cat === "C");
 
+  const maxRows = Math.max(colA.length, colB.length, colC.length);
+
+  for (let i = 0; i < maxRows; i++) {
     const row = document.createElement("tr");
 
-    const colA = document.createElement("td");
-    const colB = document.createElement("td");
-    const colC = document.createElement("td");
-
-    function mkDelBtn(){
-      const x = document.createElement("span");
-      x.className = "del-btn";
-      x.textContent = "X";
-      x.addEventListener("click",()=>deleteRecord(r.id));
-      return x;
+    // ===== CỘT A =====
+    const tdA = document.createElement("td");
+    if (colA[i]) {
+      tdA.textContent = fmt(colA[i].qty);
+      const del = document.createElement("span");
+      del.textContent = " X";
+      del.className = "del-btn";
+      del.addEventListener("click", () => deleteRecord(colA[i].id));
+      tdA.appendChild(del);
     }
 
-    if(r.cat==="A"){
-      colA.textContent = fmt(r.qty);
-      colA.appendChild(mkDelBtn());
-    }
-    if(r.cat==="B"){
-      colB.textContent = fmt(r.qty);
-      colB.appendChild(mkDelBtn());
-    }
-    if(r.cat==="C"){
-      colC.textContent = fmt(r.qty);
-      colC.appendChild(mkDelBtn());
+    // ===== CỘT B =====
+    const tdB = document.createElement("td");
+    if (colB[i]) {
+      tdB.textContent = fmt(colB[i].qty);
+      const del = document.createElement("span");
+      del.textContent = " X";
+      del.className = "del-btn";
+      del.addEventListener("click", () => deleteRecord(colB[i].id));
+      tdB.appendChild(del);
     }
 
-    row.appendChild(colA);
-    row.appendChild(colB);
-    row.appendChild(colC);
+    // ===== CỘT C =====
+    const tdC = document.createElement("td");
+    if (colC[i]) {
+      tdC.textContent = fmt(colC[i].qty);
+      const del = document.createElement("span");
+      del.textContent = " X";
+      del.className = "del-btn";
+      del.addEventListener("click", () => deleteRecord(colC[i].id));
+      tdC.appendChild(del);
+    }
+
+    row.appendChild(tdA);
+    row.appendChild(tdB);
+    row.appendChild(tdC);
 
     historyTable.appendChild(row);
-  });
+  }
 }
 
 
