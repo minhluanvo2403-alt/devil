@@ -27,7 +27,6 @@ body{
   margin-bottom:18px;
 }
 
-/* === NGÀY === */
 .date-wrapper{ position:relative; }
 .date-pill{
   background:var(--muted);
@@ -42,7 +41,6 @@ body{
   top:0; left:0; opacity:0; cursor:pointer;
 }
 
-/* === NÚT CHỌN === */
 .select-row{ display:flex; gap:12px; }
 
 .btn-select{
@@ -60,7 +58,7 @@ body{
   border-color:var(--accent-strong);
 }
 
-/* TỔNG */
+/* Tổng */
 .totals-row{ display:flex; gap:12px; }
 .total-pill{
   flex:1;
@@ -81,7 +79,7 @@ body{
   font-weight:800;
 }
 
-/* DISPLAY */
+/* Display */
 .display-slab{
   background:white;
   border:2px solid var(--pill-border);
@@ -94,7 +92,7 @@ body{
   font-weight:700;
 }
 
-/* KEYPAD */
+/* Keypad */
 .keypad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -111,7 +109,7 @@ body{
   color:black;
 }
 
-/* HISTORY */
+/* History */
 .history-header{
   display:flex; justify-content:space-between; padding-bottom:10px;
 }
@@ -127,39 +125,27 @@ body{
 }
 
 .history-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
+  width:100%; border-collapse:collapse; margin-top:10px;
 }
-
-/* ĐƯỜNG KẺ NGANG */
+.history-table th{
+  background:#f6f6f6;
+  padding:10px;
+  font-size:18px;
+}
 .history-table td{
-  padding:8px 6px;
-  border-bottom:1px solid #eee;
+  padding:10px 6px;
+  text-align:center;
   font-size:20px;
+  border-bottom:1px solid #eee;
   font-weight:700;
 }
-
-/* ĐƯỜNG KẺ DỌC */
-.history-table th:nth-child(1),
-.history-table td:nth-child(1){
-  border-right:2px solid #ddd;
-}
-
-.history-table th:nth-child(2),
-.history-table td:nth-child(2){
-  border-right:2px solid #ddd;
-}
-
-/* NÚT X */
 .del-btn{
   margin-left:8px;
   color:#d63031;
   cursor:pointer;
-  font-size:18px;
 }
 
-.hidden{display:none}
+.hidden{display:none !important}
 
 /* PASSWORD SCREEN */
 .pw-screen{
