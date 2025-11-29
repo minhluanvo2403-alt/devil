@@ -55,57 +55,54 @@
       <div class="display-slab" id="display">SỐ LƯỢNG</div>
     </section>
 
-    <!-- small spacer so content not hidden behind fixed keyboard -->
-    <div class="spacer"></div>
+    <!-- KEYPAD (KHÔNG CỐ ĐỊNH) -->
+    <nav class="keypad" id="keypad">
+      <button class="kbtn num">1</button>
+      <button class="kbtn num">2</button>
+      <button class="kbtn num">3</button>
+
+      <button class="kbtn num">4</button>
+      <button class="kbtn num">5</button>
+      <button class="kbtn num">6</button>
+
+      <button class="kbtn num">7</button>
+      <button class="kbtn num">8</button>
+      <button class="kbtn num">9</button>
+
+      <button class="kbtn action" id="btnBack">⌫</button>
+      <button class="kbtn num">0</button>
+      <button class="kbtn action" id="btnEnter">↵</button>
+    </nav>
+
+    <!-- HISTORY -->
+    <section class="card card-history" id="historyCard">
+      <header class="history-header" id="historyToggle">
+        <div> LỊCH SỬ NHẬP </div>
+        <div class="history-actions">
+          <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
+          <button id="toggleBtn" class="small-btn">ẨN</button>
+        </div>
+      </header>
+
+      <div class="history-body" id="historyBody">
+        <div class="history-columns">
+          <div class="col">
+            <h4>A</h4>
+            <ul id="hisA" class="entries"></ul>
+          </div>
+          <div class="col">
+            <h4>B</h4>
+            <ul id="hisB" class="entries"></ul>
+          </div>
+          <div class="col">
+            <h4>C</h4>
+            <ul id="hisC" class="entries"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
   </main>
-
-  <!-- FIXED KEYPAD -->
-  <nav class="keypad" id="keypad">
-    <button class="kbtn num">1</button>
-    <button class="kbtn num">2</button>
-    <button class="kbtn num">3</button>
-
-    <button class="kbtn num">4</button>
-    <button class="kbtn num">5</button>
-    <button class="kbtn num">6</button>
-
-    <button class="kbtn num">7</button>
-    <button class="kbtn num">8</button>
-    <button class="kbtn num">9</button>
-
-    <button class="kbtn action" id="btnBack">⌫</button>
-    <button class="kbtn num">0</button>
-    <button class="kbtn action" id="btnEnter">↵</button>
-  </nav>
-
-  <!-- HISTORY (below keypad in DOM; visually appears above because page has padding-bottom) -->
-  <section class="card card-history" id="historyCard">
-    <header class="history-header" id="historyToggle">
-      <div> LỊCH SỬ NHẬP </div>
-      <div class="history-actions">
-        <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
-        <button id="toggleBtn" class="small-btn">ẨN</button>
-      </div>
-    </header>
-
-    <div class="history-body" id="historyBody">
-      <div class="history-columns">
-        <div class="col">
-          <h4>A</h4>
-          <ul id="hisA" class="entries"></ul>
-        </div>
-        <div class="col">
-          <h4>B</h4>
-          <ul id="hisB" class="entries"></ul>
-        </div>
-        <div class="col">
-          <h4>C</h4>
-          <ul id="hisC" class="entries"></ul>
-        </div>
-      </div>
-    </div>
-  </section>
 
 <script src="app.js"></script>
 </body>
