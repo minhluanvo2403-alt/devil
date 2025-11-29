@@ -1,15 +1,11 @@
 /* =========================================
-        CHẶN SAFARI - CHỈ CHẠY PWA
+        KIỂM TRA CHẾ ĐỘ PWA (HOME SCREEN)
    ========================================= */
-if (!window.matchMedia('(display-mode: standalone)').matches &&
-    !navigator.standalone) {
-    document.body.innerHTML = `
-        <div style="padding:20px; font-size:22px; text-align:center;">
-            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-            Bấm <b>Chia sẻ</b> → <b>Thêm vào màn hình chính</b>.
-        </div>
-    `;
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         navigator.standalone;
 }
+
 
 /* =========================================
                  MẬT KHẨU
@@ -21,19 +17,35 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
+// Nếu chưa đăng nhập → yêu cầu nhập mật khẩu
 if (!localStorage.getItem("auth_ok")) {
     pwScreen.classList.remove("hidden");
 }
 
-pwLoginBtn.addEventListener("click", ()=>{
+// Xử lý đăng nhập
+pwLoginBtn.addEventListener("click", () => {
+
     if (pwInput.value.trim() === APP_PASSWORD) {
+
+        // Lưu xác thực để lần sau không cần nhập lại
         localStorage.setItem("auth_ok", "1");
         pwScreen.classList.add("hidden");
+
+        // SAU KHI NHẬP MẬT KHẨU MỚI KIỂM TRA SAFARI / PWA
+        if (!isStandalone()) {
+            document.body.innerHTML = `
+                <div style="padding:20px; font-size:22px; text-align:center;">
+                    Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+                    Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
+                </div>
+            `;
+        }
+
     } else {
         alert("Sai mật khẩu!");
     }
 });
+
 
 /* =========================================
                 GHI SỐ - CHÍNH
@@ -66,10 +78,12 @@ const historyBody  = document.getElementById("historyBody");
 const toggleBtn = document.getElementById("toggleBtn");
 const clearAllBtn = document.getElementById("clearAll");
 
-/* FORMAT */
+
+/* FORMAT NUMBER */
 function fmt(n){
   return n.toLocaleString('vi-VN');
 }
+
 
 /* NGÀY */
 function toLocalISO(d){
@@ -90,6 +104,7 @@ dateInput.addEventListener("change", ()=>{
   historyDate.textContent = fDate(dateInput.value);
 });
 
+
 /* CHỌN LOẠI THÁI / RI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -103,6 +118,7 @@ typeBtns.forEach(btn=>{
   });
 });
 
+
 /* CHỌN A / B / C */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -112,6 +128,7 @@ catBtns.forEach(btn=>{
     currentCat = btn.dataset.cat;
   });
 });
+
 
 /* BÀN PHÍM SỐ */
 document.querySelectorAll(".num").forEach(btn=>{
@@ -130,7 +147,8 @@ document.getElementById("btnBack").addEventListener("click", ()=>{
   updateDisplay();
 });
 
-/* NHẬP ENTER */
+
+/* ENTER = LƯU */
 document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(!inputValue || !currentType || !currentCat) return;
 
@@ -151,6 +169,7 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
   renderHistory();
 });
 
+
 /* HIỂN THỊ */
 function updateDisplay(){
   if(!inputValue){
@@ -161,6 +180,7 @@ function updateDisplay(){
     display.style.color = "#111";
   }
 }
+
 
 /* TỔNG KẾT */
 function renderSummary(){
@@ -180,7 +200,8 @@ function renderSummary(){
   totalAll.textContent = fmt(A+B+C);
 }
 
-/* XOÁ 1 Ô */
+
+/* XOÁ 1 RECORD */
 function deleteRecord(id){
   records = records.filter(r => r.id !== id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
@@ -188,7 +209,8 @@ function deleteRecord(id){
   renderHistory();
 }
 
-/* LỊCH SỬ: MỖI CAT MỘT CỘT, DỒN LÊN, DÒNG MỚI TRÊN */
+
+/* LỊCH SỬ DẠNG 3 CỘT, GIÁ TRỊ MỚI Ở TRÊN */
 function renderHistory(){
   historyTable.innerHTML = "";
 
@@ -248,6 +270,7 @@ function renderHistory(){
   }
 }
 
+
 /* XÓA TẤT CẢ */
 clearAllBtn.addEventListener("click", ()=>{
   if(confirm("Xoá toàn bộ dữ liệu?")){
@@ -258,11 +281,13 @@ clearAllBtn.addEventListener("click", ()=>{
   }
 });
 
+
 /* ẨN / HIỆN LỊCH SỬ */
 toggleBtn.addEventListener("click", ()=>{
   historyBody.classList.toggle("hidden");
   toggleBtn.textContent = historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
 });
+
 
 /* INIT */
 updateDisplay();
