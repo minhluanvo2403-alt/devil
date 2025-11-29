@@ -1,96 +1,111 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghi Số Sầu Riêng</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ghi Số Sầu Riêng</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+  <main class="screen">
 
-    <!-- NGÀY THÁNG -->
-    <h2>NGÀY THÁNG</h2>
-    <input type="date" id="dateInput" class="dateInput">
+    <!-- CARD: date + type select -->
+    <section class="card card-top">
+      <div class="date-pill" id="datePill"></div>
+      <input id="dateInput" type="date" class="date-hidden" />
 
-    <!-- CHỌN LOẠI SẦU RIÊNG -->
-    <h2>LOẠI SẦU RIÊNG</h2>
-    <div class="row">
-        <button class="typeBtn" data-type="thai">THÁI</button>
-        <button class="typeBtn" data-type="ri">RI</button>
-    </div>
+      <div class="select-row">
+        <button class="btn-select type-btn" data-type="thai">THÁI</button>
+        <button class="btn-select type-btn" data-type="ri">RI</button>
+      </div>
+    </section>
 
-    <!-- TỔNG A-B-C MỚI -->
-    <h2>TỔNG TỪNG LOẠI</h2>
-    <div class="sumRow">
-        <div class="sumBox">A: <span id="sumA">0</span></div>
-        <div class="sumBox">B: <span id="sumB">0</span></div>
-        <div class="sumBox">C: <span id="sumC">0</span></div>
-    </div>
-
-    <!-- TỔNG CỘNG MỚI -->
-    <h2>TỔNG CỘNG</h2>
-    <div class="totalBox">
-        <span id="totalAll">0</span>
-    </div>
-
-    <!-- CHỌN LOẠI A-B-C -->
-    <h2>CHỌN LOẠI</h2>
-    <div class="row">
-        <button class="catBtn" data-cat="A">A</button>
-        <button class="catBtn" data-cat="B">B</button>
-        <button class="catBtn" data-cat="C">C</button>
-    </div>
-
-    <!-- NHẬP SỐ -->
-    <h2>NHẬP SỐ LƯỢNG</h2>
-    <div id="display" class="display">0</div>
-
-</div>
-
-<!-- BÀN PHÍM CỐ ĐỊNH -->
-<div class="keypad fixed">
-    <button class="num">1</button>
-    <button class="num">2</button>
-    <button class="num">3</button>
-
-    <button class="num">4</button>
-    <button class="num">5</button>
-    <button class="num">6</button>
-
-    <button class="num">7</button>
-    <button class="num">8</button>
-    <button class="num">9</button>
-
-    <button id="delete">XÓA</button>
-    <button class="num">0</button>
-    <button id="enter">ENTER</button>
-</div>
-
-<!-- LỊCH SỬ -->
-<h2 id="historyTitle" class="historyTitle">LỊCH SỬ NHẬP (Nhấn để thu gọn)</h2>
-
-<div id="historyBox" class="historyBox">
-
-    <div class="historyRow">
-        <div class="historyCol">
-            <h3>A</h3>
-            <ul id="hisA"></ul>
+    <!-- CARD: totals -->
+    <section class="card card-totals">
+      <div class="totals-row">
+        <div class="total-pill">
+          <div class="label">A</div>
+          <div class="value" id="sumA">0</div>
         </div>
-
-        <div class="historyCol">
-            <h3>B</h3>
-            <ul id="hisB"></ul>
+        <div class="total-pill">
+          <div class="label">B</div>
+          <div class="value" id="sumB">0</div>
         </div>
-
-        <div class="historyCol">
-            <h3>C</h3>
-            <ul id="hisC"></ul>
+        <div class="total-pill">
+          <div class="label">C</div>
+          <div class="value" id="sumC">0</div>
         </div>
+      </div>
+
+      <div class="grand-pill">
+        <div class="label">Tổng</div>
+        <div class="value" id="totalAll">0</div>
+      </div>
+    </section>
+
+    <!-- CARD: choose A/B/C + display -->
+    <section class="card card-input">
+      <div class="select-row">
+        <button class="btn-select cat-btn" data-cat="A">A</button>
+        <button class="btn-select cat-btn" data-cat="B">B</button>
+        <button class="btn-select cat-btn" data-cat="C">C</button>
+      </div>
+
+      <div class="display-slab" id="display">SỐ LƯỢNG</div>
+    </section>
+
+    <!-- small spacer so content not hidden behind fixed keyboard -->
+    <div class="spacer"></div>
+
+  </main>
+
+  <!-- FIXED KEYPAD -->
+  <nav class="keypad" id="keypad">
+    <button class="kbtn num">1</button>
+    <button class="kbtn num">2</button>
+    <button class="kbtn num">3</button>
+
+    <button class="kbtn num">4</button>
+    <button class="kbtn num">5</button>
+    <button class="kbtn num">6</button>
+
+    <button class="kbtn num">7</button>
+    <button class="kbtn num">8</button>
+    <button class="kbtn num">9</button>
+
+    <button class="kbtn action" id="btnBack">⌫</button>
+    <button class="kbtn num">0</button>
+    <button class="kbtn action" id="btnEnter">↵</button>
+  </nav>
+
+  <!-- HISTORY (below keypad in DOM; visually appears above because page has padding-bottom) -->
+  <section class="card card-history" id="historyCard">
+    <header class="history-header" id="historyToggle">
+      <div> LỊCH SỬ NHẬP </div>
+      <div class="history-actions">
+        <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
+        <button id="toggleBtn" class="small-btn">ẨN</button>
+      </div>
+    </header>
+
+    <div class="history-body" id="historyBody">
+      <div class="history-columns">
+        <div class="col">
+          <h4>A</h4>
+          <ul id="hisA" class="entries"></ul>
+        </div>
+        <div class="col">
+          <h4>B</h4>
+          <ul id="hisB" class="entries"></ul>
+        </div>
+        <div class="col">
+          <h4>C</h4>
+          <ul id="hisC" class="entries"></ul>
+        </div>
+      </div>
     </div>
-
-</div>
+  </section>
 
 <script src="app.js"></script>
 </body>
