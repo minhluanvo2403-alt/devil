@@ -1,11 +1,10 @@
 {
-  "name": "Ghi cân",
-  "short_name": "Ghi cân",
-  "start_url": "./index.html",
+  "name": "Ghi Số Sầu Riêng",
+  "short_name": "Sầu Riêng",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0b5cff",
-  "orientation": "portrait-primary",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "icon-192.png",
@@ -15,6 +14,11 @@
     {
       "src": "icon-512.png",
       "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     }
   ]
