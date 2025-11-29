@@ -1,4 +1,4 @@
-let currentType = "thai"; 
+let currentType = null; 
 let currentCat = null;
 let inputValue = "";
 let data = JSON.parse(localStorage.getItem("records") || "[]");
@@ -6,14 +6,25 @@ let data = JSON.parse(localStorage.getItem("records") || "[]");
 // --- NÚT CHỌN THÁI / RI ---
 document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.addEventListener("click", () => {
+
+        document.querySelectorAll(".typeBtn")
+            .forEach(x => x.classList.remove("active"));
+
+        btn.classList.add("active");
         currentType = btn.dataset.type;
+
         calcTotals();
     });
 });
 
-// --- NÚT CHỌN A B C ---
+// --- NÚT CHỌN A / B / C ---
 document.querySelectorAll(".catBtn").forEach(btn => {
     btn.addEventListener("click", () => {
+
+        document.querySelectorAll(".catBtn")
+            .forEach(x => x.classList.remove("active"));
+
+        btn.classList.add("active");
         currentCat = btn.dataset.cat;
     });
 });
@@ -34,9 +45,21 @@ document.getElementById("delete").addEventListener("click", () => {
 
 // --- ENTER ---
 document.getElementById("enter").addEventListener("click", () => {
-    if (!currentCat || inputValue === "") return;
+
+    if (!currentType) {
+        alert("Vui lòng chọn: THÁI hoặc RI");
+        return;
+    }
+
+    if (!currentCat) {
+        alert("Vui lòng chọn loại: A / B / C");
+        return;
+    }
+
+    if (inputValue === "") return;
 
     let record = {
+        date: document.getElementById("dateInput").value,
         type: currentType,
         cat: currentCat,
         qty: Number(inputValue)
@@ -61,8 +84,10 @@ function updateDisplay() {
     document.getElementById("display").innerText = inputValue || "0";
 }
 
-// --- TÍNH TỔNG ---
+// --- TÍNH TỔNG THEO LOẠI ĐANG CHỌN (THÁI HOẶC RI) ---
 function calcTotals() {
+    if (!currentType) return;
+
     let A = 0, B = 0, C = 0;
 
     data.forEach(r => {
@@ -88,7 +113,7 @@ function renderHistory() {
     data.forEach((r, i) => {
         let tr = document.createElement("tr");
         tr.innerHTML = `
-            <td>${r.cat}</td>
+            <td>${r.type.toUpperCase()} - ${r.cat}</td>
             <td>${r.qty}</td>
             <td><button data-i="${i}" class="delRow">X</button></td>
         `;
@@ -104,6 +129,16 @@ function renderHistory() {
         });
     });
 }
+
+// --- XÓA DỮ LIỆU ---
+document.getElementById("clearAll").addEventListener("click", () => {
+    if (confirm("Xoá toàn bộ dữ liệu?")) {
+        data = [];
+        saveData();
+        renderHistory();
+        calcTotals();
+    }
+});
 
 renderHistory();
 calcTotals();
