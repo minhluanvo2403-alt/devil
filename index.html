@@ -10,10 +10,13 @@
 
 <main class="screen">
 
-  <!-- CHỌN NGÀY + THÁI/RI -->
+  <!-- NGÀY + THÁI / RI -->
   <section class="card card-top">
-    <div class="date-pill" id="datePill"></div>
-    <input id="dateInput" type="date" class="date-hidden" />
+
+    <div class="date-wrapper">
+      <div class="date-pill" id="datePill"></div>
+      <input id="dateInput" type="date" class="date-input-real" />
+    </div>
 
     <div class="select-row">
       <button class="btn-select type-btn" data-type="thai">THÁI</button>
@@ -35,7 +38,7 @@
     </div>
   </section>
 
-  <!-- CHỌN A/B/C + SỐ LƯỢNG -->
+  <!-- CHỌN A/B/C + INPUT -->
   <section class="card card-input">
     <div class="select-row">
       <button class="btn-select cat-btn" data-cat="A">A</button>
@@ -46,7 +49,7 @@
     <div class="display-slab" id="display">SỐ LƯỢNG</div>
   </section>
 
-  <!-- BÀN PHÍM -->
+  <!-- KEYPAD -->
   <nav class="keypad" id="keypad">
     <button class="kbtn num">1</button>
     <button class="kbtn num">2</button>
@@ -63,7 +66,7 @@
   </nav>
 
   <!-- LỊCH SỬ -->
-  <section class="card card-history" id="historyCard">
+  <section class="card card-history">
 
     <header class="history-header">
       <div class="top-history-title">
@@ -78,8 +81,6 @@
     </header>
 
     <div class="history-body" id="historyBody">
-
-      <!-- BẢNG 3 CỘT -->
       <table class="history-table">
         <thead>
           <tr>
@@ -90,7 +91,6 @@
         </thead>
         <tbody id="historyTable"></tbody>
       </table>
-
     </div>
 
   </section>
