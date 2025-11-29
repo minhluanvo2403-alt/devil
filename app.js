@@ -1,144 +1,70 @@
-let currentType = null; 
-let currentCat = null;
-let inputValue = "";
-let data = JSON.parse(localStorage.getItem("records") || "[]");
+let selectedType = null;
+let selectedGrade = null;
 
-// --- NÚT CHỌN THÁI / RI ---
-document.querySelectorAll(".typeBtn").forEach(btn => {
-    btn.addEventListener("click", () => {
+document.querySelectorAll('.select-btn').forEach(btn => {
+  
+  btn.addEventListener('click', () => {
 
-        document.querySelectorAll(".typeBtn")
-            .forEach(x => x.classList.remove("active"));
-
-        btn.classList.add("active");
-        currentType = btn.dataset.type;
-
-        calcTotals();
-    });
-});
-
-// --- NÚT CHỌN A / B / C ---
-document.querySelectorAll(".catBtn").forEach(btn => {
-    btn.addEventListener("click", () => {
-
-        document.querySelectorAll(".catBtn")
-            .forEach(x => x.classList.remove("active"));
-
-        btn.classList.add("active");
-        currentCat = btn.dataset.cat;
-    });
-});
-
-// --- PHÍM SỐ ---
-document.querySelectorAll(".num").forEach(btn => {
-    btn.addEventListener("click", () => {
-        inputValue += btn.innerText;
-        updateDisplay();
-    });
-});
-
-// --- XÓA ---
-document.getElementById("delete").addEventListener("click", () => {
-    inputValue = "";
-    updateDisplay();
-});
-
-// --- ENTER ---
-document.getElementById("enter").addEventListener("click", () => {
-
-    if (!currentType) {
-        alert("Vui lòng chọn: THÁI hoặc RI");
-        return;
+    if (btn.dataset.type) {
+      document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('active'));
+      selectedType = btn.dataset.type;
     }
 
-    if (!currentCat) {
-        alert("Vui lòng chọn loại: A / B / C");
-        return;
+    if (btn.dataset.grade) {
+      document.querySelectorAll('[data-grade]').forEach(b => b.classList.remove('active'));
+      selectedGrade = btn.dataset.grade;
     }
 
-    if (inputValue === "") return;
+    btn.classList.add('active');
+  });
 
-    let record = {
-        date: document.getElementById("dateInput").value,
-        type: currentType,
-        cat: currentCat,
-        qty: Number(inputValue)
-    };
-
-    data.push(record);
-    saveData();
-    renderHistory();
-    calcTotals();
-
-    inputValue = "";
-    updateDisplay();
 });
 
-// --- LƯU ---
-function saveData() {
-    localStorage.setItem("records", JSON.stringify(data));
+document.getElementById("addButton").addEventListener("click", () => {
+  const date = document.getElementById("dateInput").value;
+  const qty = document.getElementById("quantityInput").value;
+
+  if (!date || !selectedType || !selectedGrade || !qty) {
+    alert("Vui lòng chọn ngày, loại sầu riêng, loại A/B/C và số lượng.");
+    return;
+  }
+
+  addRecord(selectedType, selectedGrade, qty);
+  document.getElementById("quantityInput").value = "";
+});
+
+let historyData = {
+  RI: { A: 0, B: 0, C: 0 },
+  THAI: { A: 0, B: 0, C: 0 }
+};
+
+function addRecord(type, grade, qty) {
+  historyData[type][grade] += Number(qty);
+  renderHistory();
 }
 
-// --- HIỂN THỊ SỐ ĐANG NHẬP ---
-function updateDisplay() {
-    document.getElementById("display").innerText = inputValue || "0";
-}
-
-// --- TÍNH TỔNG THEO LOẠI ĐANG CHỌN (THÁI HOẶC RI) ---
-function calcTotals() {
-    if (!currentType) return;
-
-    let A = 0, B = 0, C = 0;
-
-    data.forEach(r => {
-        if (r.type === currentType) {
-            if (r.cat === "A") A += r.qty;
-            if (r.cat === "B") B += r.qty;
-            if (r.cat === "C") C += r.qty;
-        }
-    });
-
-    document.getElementById("totalA").innerText = A;
-    document.getElementById("totalB").innerText = B;
-    document.getElementById("totalC").innerText = C;
-
-    document.getElementById("grandTotal").innerText = A + B + C;
-}
-
-// --- HIỂN THỊ LỊCH SỬ ---
 function renderHistory() {
-    let tbody = document.querySelector("#historyTable tbody");
-    tbody.innerHTML = "";
-
-    data.forEach((r, i) => {
-        let tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${r.type.toUpperCase()} - ${r.cat}</td>
-            <td>${r.qty}</td>
-            <td><button data-i="${i}" class="delRow">X</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-
-    document.querySelectorAll(".delRow").forEach(btn => {
-        btn.addEventListener("click", () => {
-            data.splice(btn.dataset.i, 1);
-            saveData();
-            renderHistory();
-            calcTotals();
-        });
-    });
+  const table = document.getElementById("historyTable");
+  table.innerHTML = `
+    <tr>
+      <td>RI</td>
+      <td>${historyData.RI.A}</td>
+      <td>${historyData.RI.B}</td>
+      <td>${historyData.RI.C}</td>
+    </tr>
+    <tr>
+      <td>THÁI</td>
+      <td>${historyData.THAI.A}</td>
+      <td>${historyData.THAI.B}</td>
+      <td>${historyData.THAI.C}</td>
+    </tr>
+  `;
 }
 
-// --- XÓA DỮ LIỆU ---
-document.getElementById("clearAll").addEventListener("click", () => {
-    if (confirm("Xoá toàn bộ dữ liệu?")) {
-        data = [];
-        saveData();
-        renderHistory();
-        calcTotals();
-    }
-});
+document.getElementById("toggleHistory").addEventListener("click", () => {
+  const history = document.getElementById("history");
+  const arrow = document.getElementById("arrow");
 
-renderHistory();
-calcTotals();
+  history.classList.toggle("hidden");
+  arrow.textContent = history.classList.contains("hidden") ? "▼" : "▲";
+});
