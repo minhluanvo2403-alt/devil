@@ -1,99 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Ghi cân</title>
-
-  <link rel="manifest" href="./manifest.json">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./style.css">
-
-  <meta name="theme-color" content="#008f39" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ghi Số Sầu Riêng</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- ===================== APP ROOT ===================== -->
-<div id="app"></div>
+<div class="container">
 
-<!-- ===================== LỊCH SỬ ===================== -->
-<div id="history" style="padding: 15px;">
+    <!-- NGÀY THÁNG -->
+    <h2>NGÀY THÁNG</h2>
+    <div class="row">
+        <button class="typeBtn" data-type="thai">THÁI</button>
+        <button class="typeBtn" data-type="ri">RI</button>
+    </div>
 
-  <h2 style="margin-top: 20px;">📌 Lịch sử THÁI</h2>
-  <table class="history-table" id="thai-table">
-    <thead>
-      <tr>
-        <th>Loại</th>
-        <th>Số ký</th>
-        <th>Giờ</th>
-        <th>Xóa</th>
-      </tr>
-    </thead>
-    <tbody id="thai-history">
-      <!-- nội dung được render bởi app.js -->
-    </tbody>
-  </table>
+    <!-- TỔNG TỪNG LOẠI -->
+    <h2>TỔNG TỪNG LOẠI</h2>
+    <div class="row total">
+        <div>A: <span id="totalA">0</span></div>
+        <div>B: <span id="totalB">0</span></div>
+        <div>C: <span id="totalC">0</span></div>
+    </div>
 
-  <h2 style="margin-top: 30px;">📌 Lịch sử RI</h2>
-  <table class="history-table" id="ri-table">
-    <thead>
-      <tr>
-        <th>Loại</th>
-        <th>Số ký</th>
-        <th>Giờ</th>
-        <th>Xóa</th>
-      </tr>
-    </thead>
-    <tbody id="ri-history">
-      <!-- nội dung được render bởi app.js -->
-    </tbody>
-  </table>
+    <!-- TỔNG CỘNG -->
+    <h2>TỔNG CỘNG</h2>
+    <div class="grand-total">
+        <span id="grandTotal">0</span>
+    </div>
+
+    <!-- CHỌN LOẠI -->
+    <h2>CHỌN LOẠI</h2>
+    <div class="row">
+        <button class="catBtn" data-cat="A">A</button>
+        <button class="catBtn" data-cat="B">B</button>
+        <button class="catBtn" data-cat="C">C</button>
+    </div>
+
+    <!-- NHẬP SỐ LƯỢNG -->
+    <h2>NHẬP SỐ LƯỢNG</h2>
+    <div id="display" class="display">0</div>
+
+    <div class="keypad">
+        <button class="num">1</button>
+        <button class="num">2</button>
+        <button class="num">3</button>
+
+        <button class="num">4</button>
+        <button class="num">5</button>
+        <button class="num">6</button>
+
+        <button class="num">7</button>
+        <button class="num">8</button>
+        <button class="num">9</button>
+
+        <button id="delete">XÓA</button>
+        <button class="num">0</button>
+        <button id="enter">ENTER</button>
+    </div>
+
+    <!-- LỊCH SỬ -->
+    <h2>LỊCH SỬ NHẬP</h2>
+
+    <table id="historyTable">
+        <thead>
+            <tr>
+                <th>Loại</th>
+                <th>Số lượng</th>
+                <th>Xoá</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button id="clearAll" class="clearAll">XÓA DỮ LIỆU</button>
 
 </div>
 
-<script src="./app.js"></script>
-
-<script>
-/* ======================== KIỂM TRA STANDALONE ======================== */
-function isStandalone(){
-  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-}
-
-if(!isStandalone()){
-  document.body.innerHTML = `
-    <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;text-align:center;padding:20px;">
-      <h2>⚠ Ứng dụng chỉ chạy khi thêm vào Màn hình chính</h2>
-      <p>Mở Safari → Chia sẻ → Thêm vào Màn hình chính</p>
-    </div>`;
-} else {
-
-  /* ======================== MẬT KHẨU APP ======================== */
-  const APP_PASSWORD = "devilluan";
-
-  if (localStorage.getItem("authenticated") === "true") {
-    initApp();
-  } else {
-    (async function () {
-      let ok = false;
-      while (!ok) {
-        const pw = prompt("Nhập mật khẩu để mở ứng dụng:");
-        if (pw === null) {
-          document.body.innerHTML = "<p>Đã thoát ứng dụng.</p>";
-          return;
-        }
-        if (pw === APP_PASSWORD) {
-          ok = true;
-          localStorage.setItem("authenticated", "true");
-        } else alert("Mật khẩu sai, thử lại!");
-      }
-      initApp();
-    })();
-  }
-}
-
-/* ======================== SERVICE WORKER ======================== */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("SW registered"))
-      .ca
+<script src="app.js"></script>
+</body>
+</html>
