@@ -12,21 +12,25 @@
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Inter, Arial;
+  font-family:Inter, Arial, sans-serif;
   background:linear-gradient(180deg,var(--bg),#fbfcff);
   padding:12px;
 }
 
-.screen{ max-width:420px; margin:auto; }
+.screen{
+  max-width:420px;
+  margin:auto;
+}
 
 .card{
   background:#fff;
   border-radius:18px;
   padding:16px;
-  margin-bottom:18px;
   box-shadow:0 8px 22px rgba(20,30,60,0.06);
+  margin-bottom:18px;
 }
 
+/* ========== NGÀY THÁNG ========== */
 .date-pill{
   background:var(--muted);
   padding:16px;
@@ -34,10 +38,16 @@ body{
   font-weight:600;
   text-align:center;
   margin-bottom:12px;
+  font-size:18px;
 }
 .date-hidden{ display:none; }
 
-.select-row{ display:flex; gap:12px; }
+/* ========== NÚT CHỌN THÁI / RI / A / B / C ========== */
+.select-row{
+  display:flex;
+  gap:12px;
+}
+
 .btn-select{
   flex:1;
   padding:14px;
@@ -45,14 +55,21 @@ body{
   border:1px solid var(--pill-border);
   background:white;
   font-weight:700;
+  font-size:28px;    /* <<< SỬA THEO YÊU CẦU */
 }
+
 .btn-select.active{
   background:var(--accent);
   color:white;
   border-color:var(--accent-strong);
 }
 
-.totals-row{ display:flex; gap:12px; }
+/* ========== TỔNG A/B/C + TỔNG CỘNG ========== */
+.totals-row{
+  display:flex;
+  gap:12px;
+}
+
 .total-pill{
   flex:1;
   background:#eee;
@@ -60,34 +77,49 @@ body{
   border-radius:12px;
   text-align:center;
 }
-.total-pill .value{ font-size:20px; font-weight:800; }
+
+.total-pill .label{
+  font-weight:700;
+  font-size:16px;
+}
+
+.total-pill .value{
+  font-size:20px;
+  font-weight:800;
+}
+
 .grand-pill{
   background:#eee;
   padding:14px;
   border-radius:12px;
-  margin-top:10px;
   text-align:center;
+  margin-top:10px;
   font-weight:800;
   font-size:20px;
 }
 
+/* ========== HIỂN THỊ SỐ ========== */
 .display-slab{
   background:white;
   border:2px solid var(--pill-border);
   padding:18px;
+  text-align:center;
   font-size:28px;
   border-radius:12px;
-  text-align:center;
   margin-top:12px;
   color:#cfcfcf;
+  font-weight:700;
+  min-height:62px;
 }
 
+/* ========== BÀN PHÍM SỐ (KHÔNG CỐ ĐỊNH) ========== */
 .keypad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:12px;
   margin-bottom:16px;
 }
+
 .kbtn{
   background:var(--kbd);
   padding:18px 0;
@@ -95,15 +127,28 @@ body{
   font-weight:800;
   border:none;
   font-size:22px;
+  color:#000;       /* <<< SỬA THEO YÊU CẦU (màu đen) */
+  box-shadow:0 6px 12px rgba(0,0,0,0.04);
 }
 
+/* ========== LỊCH SỬ NHẬP ========== */
 .history-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding-bottom:10px;
 }
-.top-history-title{ display:flex; flex-direction:column; }
+
+.top-history-title{
+  display:flex;
+  flex-direction:column;
+}
+
+.hist-title{
+  font-size:18px;
+  font-weight:700;
+}
+
 #historyDate{
   font-size:13px;
   color:#777;
@@ -119,23 +164,28 @@ body{
   font-weight:700;
 }
 
+/* ========== BẢNG LỊCH SỬ 3 CỘT ========== */
 .history-table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
 }
+
 .history-table th{
   background:#f6f6f6;
   padding:10px;
-  font-size:16px;
+  font-size:18px;
+  font-weight:700;
 }
+
 .history-table td{
   border-bottom:1px solid #eee;
   padding:10px 6px;
   text-align:center;
   font-weight:700;
-  font-size:18px;
+  font-size:20px;
 }
+
 .del-btn{
   color:#d63031;
   cursor:pointer;
