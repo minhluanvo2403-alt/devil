@@ -1,67 +1,182 @@
-body { font-family: sans-serif; margin: 0; background: #e6ffe6; }
-#app { padding: 10px; }
+/* ================== GIAO DIỆN CHUNG ================== */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f5f6fa;
+  color: #111;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 12px;
+  box-shadow: 0 6px 18px rgba(12,20,40,0.06);
+  box-sizing: border-box;
+}
 
-h2 { margin-top: 0; }
-
-.type-select button {
-  width: 48%;
+/* ================== NGÀY – LOẠI SẦU RIÊNG ================== */
+.select-card .select-line { margin-bottom: 10px; }
+.select-card input,
+.select-card select {
+  width: 100%;
   padding: 12px;
-  margin: 3px 1%;
   font-size: 20px;
   border-radius: 10px;
-  border: 2px solid #008f39;
-  background: white;
-  font-weight: bold;
-}
-.type-select .active {
-  background: #008f39;
-  color: white;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
-.label { font-size: 18px; font-weight: bold; color: black; }
-
-#quantity {
-  font-size: 36px;
-  font-weight: bold;
+/* ================== TỔNG A – B – C – TỔNG ================== */
+.totals-card .totals {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.total-box {
+  flex: 1;
+  background: #f7f7f9;
+  border-radius: 12px;
   text-align: center;
-  margin: 15px 0;
-  color: black;
+  padding: 12px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.total-all {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  background: #f7f7f9;
+  border-radius: 12px;
+  padding: 14px;
 }
 
-.numpad button {
-  width: 31%;
-  height: 65px;
-  margin: 1%;
+/* ================== NHẬP SỐ LƯỢNG ================== */
+.input-card { text-align: center; }
+
+.hang-group {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 12px;
+}
+.hang-btn {
+  flex: 1;
+  margin: 0 4px;
+  padding: 12px 0;
+  background: #eee;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #000;
+}
+.hang-btn.active {
+  background: #000;
+  color: #fff;
+}
+
+#displaySL {
+  width: 100%;
+  padding: 14px;
   font-size: 28px;
-  background: white;
-  border-radius: 8px;
-  border: 2px solid #000;
-  color:black;
-  font-weight:bold;
+  margin-bottom: 12px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  font-weight: 900;  /* in đậm */
+  color: #000;       /* chữ đen */
+  background: #fff;
 }
 
-.save-btn {
+/* ================== BÀN PHÍM SỐ ================== */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.num-btn {
+  padding: 18px 0;
+  font-size: 24px;
+  font-weight: 900;
+  border-radius: 12px;
+  border: none;
+  background: #e9e9e9;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #000;
+}
+.num-btn:active {
+  background: #000;
+  color: #fff;
+  transform: scale(0.97);
+}
+
+/* ================== LỊCH SỬ – BẢNG 2 LOẠI ================== */
+.history-card h2 { margin-bottom: 14px; text-align: center; }
+
+.history-container {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+}
+.history-table th {
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-align: center;
+  font-size: 15px;
+}
+.history-table td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+.history-title {
+  font-weight: 700;
+  font-size: 17px;
+  margin: 8px 0 6px 0;
+}
+
+/* Nút xóa từng dòng lịch sử */
+.delete-btn {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.delete-btn:hover { opacity: 0.8; }
+
+/* XÓA TẤT CẢ */
+#xoaTat {
   margin-top: 12px;
   width: 100%;
-  padding: 15px;
-  font-size: 24px;
-  background: #008f39;
+  padding: 12px;
+  background: #ff4d4f;
+  color: #fff;
   border: none;
-  color: white;
   border-radius: 12px;
-  font-weight: bold;
+  font-weight: 700;
+  cursor: pointer;
 }
+#xoaTat:hover { opacity: 0.9; }
 
-.history { margin-top: 20px; }
-table { width: 100%; border-collapse: collapse; margin-bottom:15px; }
-th, td { border: 1px solid #555; padding: 8px; text-align: center; }
-th { background: #caffca; }
-
-.total {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 10px;
-  background: white;
-  border-radius: 6px;
-  margin-top: 8px;
+/* ================== MOBILE ================== */
+@media (max-width: 420px) {
+  .total-box { font-size: 15px; padding: 10px; }
+  .hang-btn { font-size: 18px; padding: 10px 0; }
+  #displaySL { font-size: 26px; }
+  .num-btn { font-size: 22px; padding: 14px 0; }
 }
