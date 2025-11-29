@@ -5,7 +5,7 @@ let currentType = null;
 let currentCat  = null;
 let inputValue  = "";
 
-// ELEMENTS
+// ===== ELEMENTS =====
 const dateInput = document.getElementById("dateInput");
 const datePill  = document.getElementById("datePill");
 const typeBtns  = document.querySelectorAll(".type-btn");
@@ -23,26 +23,32 @@ const toggleBtn    = document.getElementById("toggleBtn");
 const clearAllBtn  = document.getElementById("clearAll");
 const historyDate  = document.getElementById("historyDate");
 
-/* DATE INIT */
+/* === FORMAT SỐ === */
+function fmt(n){
+  return n.toLocaleString('vi-VN');
+}
+
+/* === DATE INIT === */
 function toLocalISO(d){
-  const t = new Date(d.getTime() - d.getTimezoneOffset()*60000);
-  return t.toISOString().slice(0,10);
+  return new Date(d.getTime() - d.getTimezoneOffset()*60000)
+        .toISOString().slice(0,10);
 }
 dateInput.value = toLocalISO(new Date());
 
-function formatDateReadable(iso){
-  const d = new Date(iso);
+function fDate(d){
+  d = new Date(d);
   return `Ngày ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 }
-datePill.textContent = formatDateReadable(dateInput.value);
-historyDate.textContent = formatDateReadable(dateInput.value);
+
+datePill.textContent = fDate(dateInput.value);
+historyDate.textContent = fDate(dateInput.value);
 
 dateInput.addEventListener("change", ()=>{
-  datePill.textContent = formatDateReadable(dateInput.value);
-  historyDate.textContent = formatDateReadable(dateInput.value);
+  datePill.textContent = fDate(dateInput.value);
+  historyDate.textContent = fDate(dateInput.value);
 });
 
-/* TYPE SELECT */
+/* === TYPE SELECT === */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -53,7 +59,7 @@ typeBtns.forEach(btn=>{
   });
 });
 
-/* CAT SELECT */
+/* === CAT SELECT === */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -62,7 +68,7 @@ catBtns.forEach(btn=>{
   });
 });
 
-/* KEYPAD INPUT */
+/* === KEYPAD INPUT === */
 document.querySelectorAll(".num").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
@@ -79,7 +85,7 @@ document.getElementById("btnBack").addEventListener("click", ()=>{
   updateDisplay();
 });
 
-/* ENTER TO SAVE */
+/* === ENTER SAVE === */
 document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(!inputValue || !currentType || !currentCat) return;
 
@@ -100,31 +106,36 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
   renderHistory();
 });
 
-/* DISPLAY */
+/* === DISPLAY === */
 function updateDisplay(){
-  display.textContent = inputValue || "SỐ LƯỢNG";
-  display.style.color = inputValue ? "#111" : "#cfcfcf";
+  if(!inputValue){
+    display.textContent = "SỐ LƯỢNG";
+    display.style.color = "#cfcfcf";
+  } else {
+    display.textContent = fmt(Number(inputValue));
+    display.style.color = "#111";
+  }
 }
 
-/* SUMMARY */
+/* === SUMMARY === */
 function renderSummary(){
   let A=0,B=0,C=0;
 
   records.forEach(r=>{
-    if(r.type===currentType){
+    if(r.type === currentType){
       if(r.cat==="A") A+=r.qty;
       if(r.cat==="B") B+=r.qty;
       if(r.cat==="C") C+=r.qty;
     }
   });
 
-  sumA.textContent = A;
-  sumB.textContent = B;
-  sumC.textContent = C;
-  totalAll.textContent = A+B+C;
+  sumA.textContent    = fmt(A);
+  sumB.textContent    = fmt(B);
+  sumC.textContent    = fmt(C);
+  totalAll.textContent = fmt(A+B+C);
 }
 
-/* HISTORY: TABLE 3 CỘT */
+/* === HISTORY 3 CỘT === */
 function renderHistory(){
   historyTable.innerHTML = "";
 
@@ -137,9 +148,12 @@ function renderHistory(){
     const colB = document.createElement("td");
     const colC = document.createElement("td");
 
-    if(r.cat==="A") colA.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
-    if(r.cat==="B") colB.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
-    if(r.cat==="C") colC.innerHTML = `${r.qty} <span class="del-btn" onclick="del(${r.id})">X</span>`;
+    if(r.cat==="A")
+      colA.innerHTML = `${fmt(r.qty)} <span class="del-btn" onclick="del(${r.id})">X</span>`;
+    if(r.cat==="B")
+      colB.innerHTML = `${fmt(r.qty)} <span class="del-btn" onclick="del(${r.id})">X</span>`;
+    if(r.cat==="C")
+      colC.innerHTML = `${fmt(r.qty)} <span class="del-btn" onclick="del(${r.id})">X</span>`;
 
     row.appendChild(colA);
     row.appendChild(colB);
@@ -149,9 +163,9 @@ function renderHistory(){
   });
 }
 
-/* DELETE ONE */
+/* DELETE 1 */
 function del(id){
-  records = records.filter(r=>r.id!==id);
+  records = records.filter(x=>x.id!==id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
   renderSummary();
   renderHistory();
