@@ -1,9 +1,14 @@
 /* =========================================
-        KIỂM TRA CHẠY PWA (HOME SCREEN)
+        CHẶN SAFARI - CHỈ CHẠY PWA
    ========================================= */
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches ||
-         navigator.standalone;
+if (!window.matchMedia('(display-mode: standalone)').matches &&
+    !navigator.standalone) {
+    document.body.innerHTML = `
+        <div style="padding:20px; font-size:22px; text-align:center;">
+            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+            Bấm <b>Chia sẻ</b> → <b>Thêm vào màn hình chính</b>.
+        </div>
+    `;
 }
 
 /* =========================================
@@ -16,34 +21,19 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-// Nếu đang chạy dưới dạng PWA (từ Home Screen)
-if (isStandalone()) {
-
-    // Nếu chưa đăng nhập → yêu cầu nhập mật khẩu
-    if (!localStorage.getItem("auth_ok")) {
-        pwScreen.classList.remove("hidden");
-    }
-
-    pwLoginBtn.addEventListener("click", ()=>{
-        if (pwInput.value.trim() === APP_PASSWORD) {
-
-            localStorage.setItem("auth_ok", "1");
-            pwScreen.classList.add("hidden");
-
-        } else {
-            alert("Sai mật khẩu!");
-        }
-    });
-
-} else {
-    // Nếu mở bằng Safari → không cho dùng app
-    document.body.innerHTML = `
-      <div style="padding:20px; font-size:22px; text-align:center;">
-          Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-          Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
-      </div>
-    `;
+// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
+if (!localStorage.getItem("auth_ok")) {
+    pwScreen.classList.remove("hidden");
 }
+
+pwLoginBtn.addEventListener("click", ()=>{
+    if (pwInput.value.trim() === APP_PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+        pwScreen.classList.add("hidden");
+    } else {
+        alert("Sai mật khẩu!");
+    }
+});
 
 /* =========================================
                 GHI SỐ - CHÍNH
