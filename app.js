@@ -3,7 +3,7 @@ let currentCat = null;
 let inputValue = "";
 let records = [];
 
-// chọn loại THÁI / RI
+// chọn THÁI / RI
 document.querySelectorAll(".typeBtn").forEach(btn => {
     btn.addEventListener("click", () => {
         document.querySelectorAll(".typeBtn").forEach(x => x.classList.remove("active"));
@@ -41,7 +41,7 @@ document.getElementById("delete").addEventListener("click", () => {
     updateDisplay();
 });
 
-// enter
+// ENTER
 document.getElementById("enter").addEventListener("click", () => {
 
     if (!currentType || !currentCat) {
@@ -63,12 +63,12 @@ document.getElementById("enter").addEventListener("click", () => {
     renderHistory();
 });
 
-// cập nhật màn hình
+// cập nhật ô hiển thị
 function updateDisplay() {
     document.getElementById("display").innerText = inputValue || "0";
 }
 
-// tính tổng
+// cập nhật tổng
 function updateSummary() {
     let A = 0, B = 0, C = 0;
 
@@ -83,7 +83,6 @@ function updateSummary() {
     document.getElementById("sumA").innerText = A;
     document.getElementById("sumB").innerText = B;
     document.getElementById("sumC").innerText = C;
-
     document.getElementById("totalAll").innerText = A + B + C;
 }
 
@@ -99,6 +98,7 @@ function renderHistory() {
 
     records.forEach(r => {
         if (r.type !== currentType) return;
+
         let li = document.createElement("li");
         li.innerText = r.qty;
 
@@ -108,8 +108,7 @@ function renderHistory() {
     });
 }
 
-// thu gọn / mở rộng lịch sử
+// ẩn/hiện lịch sử
 document.getElementById("historyTitle").addEventListener("click", () => {
-    let box = document.getElementById("historyBox");
-    box.classList.toggle("hidden");
+    document.getElementById("historyBox").classList.toggle("hidden");
 });
