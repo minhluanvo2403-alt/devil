@@ -1,11 +1,15 @@
 /* =========================================
-        KIỂM TRA CHẾ ĐỘ PWA (HOME SCREEN)
+        CHẶN SAFARI - CHỈ CHẠY PWA
    ========================================= */
-function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches ||
-         navigator.standalone;
+if (!window.matchMedia('(display-mode: standalone)').matches &&
+    !navigator.standalone) {
+    document.body.innerHTML = `
+        <div style="padding:20px; font-size:22px; text-align:center;">
+            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
+            Bấm <b>Chia sẻ</b> → <b>Thêm vào màn hình chính</b>.
+        </div>
+    `;
 }
-
 
 /* =========================================
                  MẬT KHẨU
@@ -17,30 +21,15 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-// Nếu chưa đăng nhập → yêu cầu nhập mật khẩu
+// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
 if (!localStorage.getItem("auth_ok")) {
     pwScreen.classList.remove("hidden");
 }
 
-// Xử lý đăng nhập
-pwLoginBtn.addEventListener("click", () => {
-
+pwLoginBtn.addEventListener("click", ()=>{
     if (pwInput.value.trim() === APP_PASSWORD) {
-
-        // Lưu xác thực để lần sau không cần nhập lại
         localStorage.setItem("auth_ok", "1");
         pwScreen.classList.add("hidden");
-
-        // SAU KHI NHẬP MẬT KHẨU MỚI KIỂM TRA SAFARI / PWA
-        if (!isStandalone()) {
-            document.body.innerHTML = `
-                <div style="padding:20px; font-size:22px; text-align:center;">
-                    Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-                    Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
-                </div>
-            `;
-        }
-
     } else {
         alert("Sai mật khẩu!");
     }
@@ -54,19 +43,16 @@ pwLoginBtn.addEventListener("click", () => {
 const LS_KEY = "sr_records";
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
 
-let currentType = null; // THÁI / RI
-let currentCat  = null; // A / B / C
+let currentType = null;
+let currentCat  = null;
 let inputValue  = "";
 
 // ELEMENTS
-const dateInput   = document.getElementById("dateInput");
-const datePill    = document.getElementById("datePill");
-const historyDate = document.getElementById("historyDate");
-
-const typeBtns = document.querySelectorAll(".type-btn");
-const catBtns  = document.querySelectorAll(".cat-btn");
-
-const display = document.getElementById("display");
+const dateInput = document.getElementById("dateInput");
+const datePill  = document.getElementById("datePill");
+const typeBtns  = document.querySelectorAll(".type-btn");
+const catBtns   = document.querySelectorAll(".cat-btn");
+const display   = document.getElementById("display");
 
 const sumA = document.getElementById("sumA");
 const sumB = document.getElementById("sumB");
@@ -75,11 +61,12 @@ const totalAll = document.getElementById("totalAll");
 
 const historyTable = document.getElementById("historyTable");
 const historyBody  = document.getElementById("historyBody");
-const toggleBtn = document.getElementById("toggleBtn");
-const clearAllBtn = document.getElementById("clearAll");
+const toggleBtn    = document.getElementById("toggleBtn");
+const clearAllBtn  = document.getElementById("clearAll");
+const historyDate  = document.getElementById("historyDate");
 
 
-/* FORMAT NUMBER */
+/* FORMAT */
 function fmt(n){
   return n.toLocaleString('vi-VN');
 }
@@ -88,14 +75,16 @@ function fmt(n){
 /* NGÀY */
 function toLocalISO(d){
   return new Date(d.getTime() - d.getTimezoneOffset()*60000)
-      .toISOString().slice(0,10);
+        .toISOString().slice(0,10);
 }
+
 dateInput.value = toLocalISO(new Date());
 
 function fDate(d){
   d = new Date(d);
   return `Ngày ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
 }
+
 datePill.textContent = fDate(dateInput.value);
 historyDate.textContent = fDate(dateInput.value);
 
@@ -105,7 +94,7 @@ dateInput.addEventListener("change", ()=>{
 });
 
 
-/* CHỌN LOẠI THÁI / RI */
+/* LOẠI THÁI / RI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -119,7 +108,7 @@ typeBtns.forEach(btn=>{
 });
 
 
-/* CHỌN A / B / C */
+/* A / B / C */
 catBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     catBtns.forEach(x=>x.classList.remove("active"));
@@ -130,7 +119,7 @@ catBtns.forEach(btn=>{
 });
 
 
-/* BÀN PHÍM SỐ */
+/* KEYPAD */
 document.querySelectorAll(".num").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
@@ -148,12 +137,13 @@ document.getElementById("btnBack").addEventListener("click", ()=>{
 });
 
 
-/* ENTER = LƯU */
+/* ENTER LƯU */
 document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(!inputValue || !currentType || !currentCat) return;
 
   const rec = {
     id: Date.now(),
+    group: Date.now(), // giữ group riêng cho mỗi record (không gộp cứng)
     date: dateInput.value,
     type: currentType,
     cat: currentCat,
@@ -170,7 +160,7 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
 });
 
 
-/* HIỂN THỊ */
+/* DISPLAY */
 function updateDisplay(){
   if(!inputValue){
     display.textContent = "SỐ LƯỢNG";
@@ -182,7 +172,7 @@ function updateDisplay(){
 }
 
 
-/* TỔNG KẾT */
+/* SUMMARY */
 function renderSummary(){
   let A=0,B=0,C=0;
 
@@ -201,7 +191,7 @@ function renderSummary(){
 }
 
 
-/* XOÁ 1 RECORD */
+/* XÓA TỪNG RECORD */
 function deleteRecord(id){
   records = records.filter(r => r.id !== id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
@@ -210,55 +200,57 @@ function deleteRecord(id){
 }
 
 
-/* LỊCH SỬ DẠNG 3 CỘT, GIÁ TRỊ MỚI Ở TRÊN */
-function renderHistory(){
+/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ */
+function renderHistory() {
   historyTable.innerHTML = "";
 
-  if(!currentType) return;
+  if (!currentType) return;
 
+  // Lọc theo loại THÁI/RI
   const list = records
     .filter(r => r.type === currentType)
-    .sort((a,b)=> b.id - a.id);
+    .sort((a, b) => a.id - b.id);
 
+  // Tạo 3 cột riêng
   const colA = list.filter(r => r.cat === "A");
   const colB = list.filter(r => r.cat === "B");
   const colC = list.filter(r => r.cat === "C");
 
   const maxRows = Math.max(colA.length, colB.length, colC.length);
 
-  for(let i=0; i<maxRows; i++){
+  for (let i = 0; i < maxRows; i++) {
     const row = document.createElement("tr");
 
-    // A
+    // ===== CỘT A =====
     const tdA = document.createElement("td");
-    if(colA[i]){
+    if (colA[i]) {
       tdA.textContent = fmt(colA[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.onclick = ()=> deleteRecord(colA[i].id);
+      del.addEventListener("click", () => deleteRecord(colA[i].id));
       tdA.appendChild(del);
     }
 
-    // B
+    // ===== CỘT B =====
     const tdB = document.createElement("td");
-    if(colB[i]){
+    if (colB[i]) {
       tdB.textContent = fmt(colB[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.onclick = ()=> deleteRecord(colB[i].id);
+      del.addEventListener("click", () => deleteRecord(colB[i].id));
       tdB.appendChild(del);
     }
 
-    // C
+    // ===== CỘT C =====
     const tdC = document.createElement("td");
-    if(colC[i]){
+    if (colC[i]) {
       tdC.textContent = fmt(colC[i].qty);
       const del = document.createElement("span");
       del.textContent = " X";
       del.className = "del-btn";
-      del.onclick = ()=> deleteRecord(colC[i].id);
+      del.addEventListener("click", () => deleteRecord(colC[i].id));
       tdC.appendChild(del);
     }
 
@@ -271,7 +263,7 @@ function renderHistory(){
 }
 
 
-/* XÓA TẤT CẢ */
+/* CLEAR ALL */
 clearAllBtn.addEventListener("click", ()=>{
   if(confirm("Xoá toàn bộ dữ liệu?")){
     records = [];
@@ -282,10 +274,11 @@ clearAllBtn.addEventListener("click", ()=>{
 });
 
 
-/* ẨN / HIỆN LỊCH SỬ */
+/* SHOW / HIDE HISTORY */
 toggleBtn.addEventListener("click", ()=>{
   historyBody.classList.toggle("hidden");
-  toggleBtn.textContent = historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
+  toggleBtn.textContent =
+    historyBody.classList.contains("hidden") ? "HIỆN" : "ẨN";
 });
 
 
