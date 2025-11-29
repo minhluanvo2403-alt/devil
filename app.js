@@ -6,7 +6,6 @@ if (!window.matchMedia('(display-mode: standalone)').matches &&
     document.body.innerHTML = `
         <div style="padding:20px; font-size:22px; text-align:center;">
             Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-            Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
         </div>
     `;
 }
@@ -21,7 +20,6 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
 if (!localStorage.getItem("auth_ok")) {
     pwScreen.classList.remove("hidden");
 }
@@ -143,7 +141,6 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
 
   const rec = {
     id: Date.now(),
-    group: Date.now(), // giữ group riêng cho mỗi record (không gộp cứng)
     date: dateInput.value,
     type: currentType,
     cat: currentCat,
@@ -200,18 +197,18 @@ function deleteRecord(id){
 }
 
 
-/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ */
+/* LỊCH SỬ: DỒN CỘT + DÒNG MỚI TRÊN + XOÁ TỪNG Ô */
 function renderHistory() {
   historyTable.innerHTML = "";
 
   if (!currentType) return;
 
-  // Lọc theo loại THÁI/RI
+  // Lọc theo THÁI/RI và đảo thứ tự (mới → cũ)
   const list = records
     .filter(r => r.type === currentType)
-    .sort((a, b) => a.id - b.id);
+    .sort((a, b) => b.id - a.id);
 
-  // Tạo 3 cột riêng
+  // Tách thành 3 cột
   const colA = list.filter(r => r.cat === "A");
   const colB = list.filter(r => r.cat === "B");
   const colC = list.filter(r => r.cat === "C");
