@@ -1,66 +1,96 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ghi Số Sầu Riêng</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghi Số Sầu Riêng</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <h2>Ghi Số Sầu Riêng</h2>
+    <!-- NGÀY THÁNG -->
+    <h2>NGÀY THÁNG</h2>
+    <input type="date" id="dateInput" class="dateInput">
 
-    <!-- Chọn ngày -->
-    <label>Ngày nhập:</label>
-    <input type="date" id="dateInput">
-
-    <!-- Chọn loại trái RI hoặc THÁI -->
-    <label>Loại sầu riêng:</label>
-    <div class="select-group">
-      <button class="select-btn" data-type="RI">RI</button>
-      <button class="select-btn" data-type="THAI">THÁI</button>
+    <!-- CHỌN LOẠI SẦU RIÊNG -->
+    <h2>LOẠI SẦU RIÊNG</h2>
+    <div class="row">
+        <button class="typeBtn" data-type="thai">THÁI</button>
+        <button class="typeBtn" data-type="ri">RI</button>
     </div>
 
-    <!-- Chọn A/B/C -->
-    <label>Phân loại:</label>
-    <div class="select-group">
-      <button class="select-btn" data-grade="A">A</button>
-      <button class="select-btn" data-grade="B">B</button>
-      <button class="select-btn" data-grade="C">C</button>
+    <!-- TỔNG TỪNG LOẠI -->
+    <h2>TỔNG TỪNG LOẠI</h2>
+    <div class="sumRow">
+        <div class="sumBox">A: <span id="sumA">0</span></div>
+        <div class="sumBox">B: <span id="sumB">0</span></div>
+        <div class="sumBox">C: <span id="sumC">0</span></div>
     </div>
 
-    <!-- Nhập số lượng -->
-    <label>Số lượng:</label>
-    <input type="number" id="quantityInput" placeholder="Nhập số lượng...">
-
-    <button id="addButton" class="add-btn">THÊM</button>
-
-    <hr>
-
-    <!-- Thu gọn lịch sử -->
-    <div class="history-header" id="toggleHistory">
-      <h3>Lịch sử nhập</h3>
-      <span id="arrow">▼</span>
+    <!-- TỔNG CỘNG -->
+    <h2>TỔNG CỘNG</h2>
+    <div class="totalBox">
+        <span id="totalAll">0</span>
     </div>
 
-    <div id="history" class="history hidden">
-      <table>
-        <thead>
-          <tr>
-            <th>Loại</th>
-            <th>A</th>
-            <th>B</th>
-            <th>C</th>
-          </tr>
-        </thead>
-        <tbody id="historyTable"></tbody>
-      </table>
+    <!-- CHỌN LOẠI A-B-C -->
+    <h2>CHỌN LOẠI</h2>
+    <div class="row">
+        <button class="catBtn" data-cat="A">A</button>
+        <button class="catBtn" data-cat="B">B</button>
+        <button class="catBtn" data-cat="C">C</button>
     </div>
 
-  </div>
+    <!-- NHẬP SỐ LƯỢNG -->
+    <h2>NHẬP SỐ LƯỢNG</h2>
+    <div id="display" class="display">0</div>
 
-  <script src="app.js"></script>
+    <div class="keypad">
+        <button class="num">1</button>
+        <button class="num">2</button>
+        <button class="num">3</button>
+
+        <button class="num">4</button>
+        <button class="num">5</button>
+        <button class="num">6</button>
+
+        <button class="num">7</button>
+        <button class="num">8</button>
+        <button class="num">9</button>
+
+        <button id="delete">XÓA</button>
+        <button class="num">0</button>
+        <button id="enter">ENTER</button>
+    </div>
+
+    <!-- LỊCH SỬ -->
+    <h2 id="historyTitle" class="historyTitle">LỊCH SỬ NHẬP (Nhấn để thu gọn)</h2>
+
+    <div id="historyBox" class="historyBox">
+
+        <div class="historyRow">
+            <div class="historyCol">
+                <h3>A</h3>
+                <ul id="hisA"></ul>
+            </div>
+
+            <div class="historyCol">
+                <h3>B</h3>
+                <ul id="hisB"></ul>
+            </div>
+
+            <div class="historyCol">
+                <h3>C</h3>
+                <ul id="hisC"></ul>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
