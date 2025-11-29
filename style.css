@@ -45,7 +45,7 @@ body{
 
 .btn-select{
   flex:1;
-  padding:14px;
+  padding:10px;
   border-radius:12px;
   background:white;
   border:1px solid var(--pill-border);
@@ -83,7 +83,7 @@ body{
 .display-slab{
   background:white;
   border:2px solid var(--pill-border);
-  padding:18px;
+  padding:15px;
   text-align:center;
   font-size:28px;
   border-radius:12px;
