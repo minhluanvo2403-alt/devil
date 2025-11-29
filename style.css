@@ -61,12 +61,12 @@ body{
 
 .btn-select{
   flex:1;
-  padding:14px;
+  padding:10px;
   border-radius:12px;
   border:1px solid var(--pill-border);
   background:white;
-  font-weight:700;
-  font-size:28px;   /* size lớn bằng ô hiển thị */
+  font-weight:500;
+  font-size:20px;   /* size lớn bằng ô hiển thị */
 }
 
 .btn-select.active{
