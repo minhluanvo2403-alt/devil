@@ -6,7 +6,7 @@ if (!window.matchMedia('(display-mode: standalone)').matches &&
     document.body.innerHTML = `
         <div style="padding:20px; font-size:22px; text-align:center;">
             Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-            Bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.
+            Bấm <b>Chia sẻ</b> → <b>Cảm ơn</b>.
         </div>
     `;
 }
