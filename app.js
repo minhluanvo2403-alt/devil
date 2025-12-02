@@ -71,14 +71,21 @@ function fmt(n){
   return n.toLocaleString('vi-VN');
 }
 
-
-/* NGÀY */
+/* NGÀY (KHÔNG TỰ NHẢY QUA NGÀY MỚI) */
 function toLocalISO(d){
   return new Date(d.getTime() - d.getTimezoneOffset()*60000)
         .toISOString().slice(0,10);
 }
 
-dateInput.value = toLocalISO(new Date());
+const savedDate = localStorage.getItem("last_date");
+
+// nếu có ngày cũ → dùng lại, không auto thay đổi
+if (savedDate) {
+    dateInput.value = savedDate;
+} else {
+    dateInput.value = toLocalISO(new Date());
+    localStorage.setItem("last_date", dateInput.value);
+}
 
 function fDate(d){
   d = new Date(d);
@@ -89,8 +96,11 @@ datePill.textContent = fDate(dateInput.value);
 historyDate.textContent = fDate(dateInput.value);
 
 dateInput.addEventListener("change", ()=>{
+  localStorage.setItem("last_date", dateInput.value);
   datePill.textContent = fDate(dateInput.value);
   historyDate.textContent = fDate(dateInput.value);
+  renderSummary();
+  renderHistory();
 });
 
 
@@ -143,7 +153,7 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
 
   const rec = {
     id: Date.now(),
-    group: Date.now(), // giữ group riêng cho mỗi record (không gộp cứng)
+    group: Date.now(),
     date: dateInput.value,
     type: currentType,
     cat: currentCat,
@@ -191,8 +201,10 @@ function renderSummary(){
 }
 
 
-/* XÓA TỪNG RECORD */
+/* XÓA TỪNG RECORD — ĐÃ THÊM CONFIRM() */
 function deleteRecord(id){
+  if (!confirm("Bạn có chắc muốn xoá dữ liệu này không?")) return;
+
   records = records.filter(r => r.id !== id);
   localStorage.setItem(LS_KEY, JSON.stringify(records));
   renderSummary();
@@ -200,7 +212,7 @@ function deleteRecord(id){
 }
 
 
-/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN KHI XOÁ (MỚI → CŨ) */
+/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN */
 function renderHistory() {
   historyTable.innerHTML = "";
 
