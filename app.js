@@ -5,8 +5,8 @@ if (!window.matchMedia('(display-mode: standalone)').matches &&
     !navigator.standalone) {
     document.body.innerHTML = `
         <div style="padding:20px; font-size:22px; text-align:center;">
-            Ứng dụng chỉ hoạt động khi được thêm vào Màn hình chính.<br><br>
-            Chân thành cảm ơn.
+            Hỏng có gì để xem hết luôn á.<br><br>
+            Liu liu.
         </div>
     `;
 }
