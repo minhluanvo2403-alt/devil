@@ -1,106 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-  <title>Ghi Số Sầu Riêng — Đồng bộ Google Sheets</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- BẮT BUỘC CHO iPHONE -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>Ghi Số Sầu Riêng</title>
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- GAPI -->
-  <script src="https://apis.google.com/js/api.js" defer></script>
+  <!-- Icon chuẩn iOS -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
-  <!-- apple touch icon & manifest if you need -->
+  <!-- manifest -->
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <div id="topbar" style="max-width:420px;margin:12px auto;display:flex;gap:8px;align-items:center;">
-    <button id="signinBtn">Đăng nhập Google</button>
-    <button id="signoutBtn" style="display:none">Đăng xuất</button>
-    <div id="authStatus" style="margin-left:auto;color:#333;font-weight:600"></div>
-  </div>
 
-  <!-- Password screen -->
-  <div id="passwordScreen" class="pw-screen hidden">
-    <div class="pw-box">
-      <h2>Nhập mật khẩu</h2>
-      <input id="pwInput" type="password" maxlength="20" placeholder="Nhập mật khẩu" />
-      <button id="pwLoginBtn">Mở ứng dụng</button>
+<!-- MÀN HÌNH NHẬP MẬT KHẨU -->
+<div id="passwordScreen" class="pw-screen hidden">
+  <div class="pw-box">
+    <h2>Nhập mật khẩu</h2>
+    <input id="pwInput" type="password" maxlength="20" placeholder="Nhập mật khẩu" />
+    <button id="pwLoginBtn">Mở ứng dụng</button>
+  </div>
+</div>
+
+<main class="screen">
+
+  <!-- NGÀY + THÁI/RI -->
+  <section class="card card-top">
+
+    <div class="date-wrapper">
+      <div class="date-pill" id="datePill"></div>
+      <input id="dateInput" type="date" class="date-input-real" />
     </div>
-  </div>
 
-  <main class="screen">
-    <!-- date + type -->
-    <section class="card card-top">
-      <div class="date-wrapper">
-        <div class="date-pill" id="datePill"></div>
-        <input id="dateInput" type="date" class="date-input-real" />
+    <div class="select-row">
+      <button class="btn-select type-btn" data-type="thai">THÁI</button>
+      <button class="btn-select type-btn" data-type="ri">RI</button>
+    </div>
+  </section>
+
+  <!-- TỔNG -->
+  <section class="card card-totals">
+    <div class="totals-row">
+      <div class="total-pill"><div class="label">A</div><div class="value" id="sumA">0</div></div>
+      <div class="total-pill"><div class="label">B</div><div class="value" id="sumB">0</div></div>
+      <div class="total-pill"><div class="label">C</div><div class="value" id="sumC">0</div></div>
+    </div>
+
+    <div class="grand-pill">
+      <div class="label">Tổng</div>
+      <div class="value" id="totalAll">0</div>
+    </div>
+  </section>
+
+  <!-- CHỌN A/B/C + DISPLAY -->
+  <section class="card card-input">
+    <div class="select-row">
+      <button class="btn-select cat-btn" data-cat="A">A</button>
+      <button class="btn-select cat-btn" data-cat="B">B</button>
+      <button class="btn-select cat-btn" data-cat="C">C</button>
+    </div>
+
+    <div class="display-slab" id="display">SỐ LƯỢNG</div>
+  </section>
+
+  <!-- KEYPAD -->
+  <nav class="keypad">
+    <button class="kbtn num">1</button>
+    <button class="kbtn num">2</button>
+    <button class="kbtn num">3</button>
+    <button class="kbtn num">4</button>
+    <button class="kbtn num">5</button>
+    <button class="kbtn num">6</button>
+    <button class="kbtn num">7</button>
+    <button class="kbtn num">8</button>
+    <button class="kbtn num">9</button>
+    <button class="kbtn action" id="btnBack">⌫</button>
+    <button class="kbtn num">0</button>
+    <button class="kbtn action" id="btnEnter">↵</button>
+  </nav>
+
+  <!-- LỊCH SỬ -->
+  <section class="card card-history">
+    <header class="history-header">
+      <div class="top-history-title">
+        <div class="hist-title">LỊCH SỬ NHẬP</div>
+        <div id="historyDate">Ngày …</div>
       </div>
-      <div class="select-row">
-        <button class="btn-select type-btn" data-type="thai">THÁI</button>
-        <button class="btn-select type-btn" data-type="ri">RI</button>
+
+      <div class="history-actions">
+        <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
+        <button id="toggleBtn" class="small-btn">ẨN</button>
       </div>
-    </section>
+    </header>
 
-    <!-- totals -->
-    <section class="card card-totals">
-      <div class="totals-row">
-        <div class="total-pill"><div class="label">A</div><div class="value" id="sumA">0</div></div>
-        <div class="total-pill"><div class="label">B</div><div class="value" id="sumB">0</div></div>
-        <div class="total-pill"><div class="label">C</div><div class="value" id="sumC">0</div></div>
-      </div>
-      <div class="grand-pill"><div class="label">Tổng</div><div class="value" id="totalAll">0</div></div>
-    </section>
+    <div class="history-body" id="historyBody">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+          </tr>
+        </thead>
+        <tbody id="historyTable"></tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- select A/B/C + display -->
-    <section class="card card-input">
-      <div class="select-row">
-        <button class="btn-select cat-btn" data-cat="A">A</button>
-        <button class="btn-select cat-btn" data-cat="B">B</button>
-        <button class="btn-select cat-btn" data-cat="C">C</button>
-      </div>
-      <div class="display-slab" id="display">SỐ LƯỢNG</div>
-    </section>
+</main>
 
-    <!-- keypad -->
-    <nav class="keypad">
-      <button class="kbtn num">1</button>
-      <button class="kbtn num">2</button>
-      <button class="kbtn num">3</button>
-      <button class="kbtn num">4</button>
-      <button class="kbtn num">5</button>
-      <button class="kbtn num">6</button>
-      <button class="kbtn num">7</button>
-      <button class="kbtn num">8</button>
-      <button class="kbtn num">9</button>
-      <button class="kbtn action" id="btnBack">⌫</button>
-      <button class="kbtn num">0</button>
-      <button class="kbtn action" id="btnEnter">↵</button>
-    </nav>
-
-    <!-- history -->
-    <section class="card card-history">
-      <header class="history-header">
-        <div class="top-history-title">
-          <div class="hist-title">LỊCH SỬ NHẬP</div>
-          <div id="historyDate">Ngày …</div>
-        </div>
-        <div class="history-actions">
-          <button id="clearAll" class="small-btn">XÓA DỮ LIỆU</button>
-          <button id="toggleBtn" class="small-btn">ẨN</button>
-        </div>
-      </header>
-
-      <div class="history-body" id="historyBody">
-        <table class="history-table">
-          <thead>
-            <tr><th>A</th><th>B</th><th>C</th></tr>
-          </thead>
-          <tbody id="historyTable"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-
-  <script src="app.js" defer></script>
+<script src="app.js"></script>
 </body>
 </html>
