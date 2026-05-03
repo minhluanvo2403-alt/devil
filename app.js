@@ -1,6 +1,6 @@
 /* =========================================
         CHẶN SAFARI - CHỈ CHẠY PWA
-   ========================================= */
+========================================= */
 if (!window.matchMedia('(display-mode: standalone)').matches &&
     !navigator.standalone) {
     document.body.innerHTML = `
@@ -13,7 +13,7 @@ if (!window.matchMedia('(display-mode: standalone)').matches &&
 
 /* =========================================
                  MẬT KHẨU
-   ========================================= */
+========================================= */
 
 const APP_PASSWORD = "minhluan";
 
@@ -21,7 +21,6 @@ const pwScreen   = document.getElementById("passwordScreen");
 const pwInput    = document.getElementById("pwInput");
 const pwLoginBtn = document.getElementById("pwLoginBtn");
 
-// Nếu chưa xác nhận lần đầu → yêu cầu nhập 1 lần
 if (!localStorage.getItem("auth_ok")) {
     pwScreen.classList.remove("hidden");
 }
@@ -38,7 +37,7 @@ pwLoginBtn.addEventListener("click", ()=>{
 
 /* =========================================
                 GHI SỐ - CHÍNH
-   ========================================= */
+========================================= */
 
 const LS_KEY = "sr_records";
 let records = JSON.parse(localStorage.getItem(LS_KEY) || "[]");
@@ -68,10 +67,12 @@ const historyDate  = document.getElementById("historyDate");
 
 /* FORMAT */
 function fmt(n){
-  return n.toLocaleString('vi-VN');
+  return Number(n).toLocaleString('vi-VN', {
+    maximumFractionDigits: 2
+  });
 }
 
-/* NGÀY (KHÔNG TỰ NHẢY QUA NGÀY MỚI) */
+/* NGÀY */
 function toLocalISO(d){
   return new Date(d.getTime() - d.getTimezoneOffset()*60000)
         .toISOString().slice(0,10);
@@ -79,7 +80,6 @@ function toLocalISO(d){
 
 const savedDate = localStorage.getItem("last_date");
 
-// nếu có ngày cũ → dùng lại, không auto thay đổi
 if (savedDate) {
     dateInput.value = savedDate;
 } else {
@@ -104,7 +104,7 @@ dateInput.addEventListener("change", ()=>{
 });
 
 
-/* LOẠI THÁI / RI */
+/* LOẠI */
 typeBtns.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     typeBtns.forEach(x=>x.classList.remove("active"));
@@ -129,14 +129,23 @@ catBtns.forEach(btn=>{
 });
 
 
-/* KEYPAD */
+/* KEYPAD (ĐÃ HỖ TRỢ THẬP PHÂN) */
 document.querySelectorAll(".num").forEach(btn=>{
   btn.addEventListener("click", ()=>{
     if(!currentType || !currentCat){
       alert("Vui lòng chọn THÁI/RI và A/B/C!");
       return;
     }
-    inputValue += btn.textContent;
+
+    const val = btn.textContent;
+
+    // không cho nhiều dấu .
+    if (val === "." && inputValue.includes(".")) return;
+
+    // không cho bắt đầu bằng .
+    if (val === "." && inputValue === "") return;
+
+    inputValue += val;
     updateDisplay();
   });
 });
@@ -147,7 +156,7 @@ document.getElementById("btnBack").addEventListener("click", ()=>{
 });
 
 
-/* ENTER LƯU */
+/* ENTER */
 document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(!inputValue || !currentType || !currentCat) return;
 
@@ -176,7 +185,9 @@ function updateDisplay(){
     display.textContent = "SỐ LƯỢNG";
     display.style.color = "#cfcfcf";
   } else {
-    display.textContent = fmt(Number(inputValue));
+    display.textContent = Number(inputValue).toLocaleString('vi-VN', {
+      maximumFractionDigits: 2
+    });
     display.style.color = "#111";
   }
 }
@@ -201,7 +212,7 @@ function renderSummary(){
 }
 
 
-/* XÓA TỪNG RECORD — ĐÃ THÊM CONFIRM() */
+/* DELETE */
 function deleteRecord(id){
   if (!confirm("Bạn có chắc muốn xoá dữ liệu này không?")) return;
 
@@ -212,7 +223,7 @@ function deleteRecord(id){
 }
 
 
-/* LỊCH SỬ DẠNG BẢNG 3 CỘT — TỰ DỒN */
+/* HISTORY */
 function renderHistory() {
   historyTable.innerHTML = "";
 
@@ -231,7 +242,6 @@ function renderHistory() {
   for (let i = 0; i < maxRows; i++) {
     const row = document.createElement("tr");
 
-    // A
     const tdA = document.createElement("td");
     if (colA[i]) {
       tdA.textContent = fmt(colA[i].qty);
@@ -242,7 +252,6 @@ function renderHistory() {
       tdA.appendChild(del);
     }
 
-    // B
     const tdB = document.createElement("td");
     if (colB[i]) {
       tdB.textContent = fmt(colB[i].qty);
@@ -253,7 +262,6 @@ function renderHistory() {
       tdB.appendChild(del);
     }
 
-    // C
     const tdC = document.createElement("td");
     if (colC[i]) {
       tdC.textContent = fmt(colC[i].qty);
@@ -284,7 +292,8 @@ clearAllBtn.addEventListener("click", ()=>{
   }
 });
 
-/* SHOW / HIDE HISTORY */
+
+/* TOGGLE */
 toggleBtn.addEventListener("click", ()=>{
   historyBody.classList.toggle("hidden");
   toggleBtn.textContent =
