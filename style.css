@@ -96,7 +96,7 @@ body{
 .keypad{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  gap:10px;
   margin-bottom:16px;
 }
 .kbtn{
@@ -187,4 +187,12 @@ body{
 }
 button, .btn-select, .kbtn {
   touch-action: manipulation;
+}
+/* ENTER FULL HÀNG */
+.kbtn.enter{
+  grid-column: span 3;
+  background:#111;
+  color:#fff;
+  font-size:22px;
+  padding:20px 0;
 }
